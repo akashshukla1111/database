@@ -1,0 +1,2314 @@
+[
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000011",
+        "locationName": "RDC6094-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 12,
+            "physicalQuantity": 0,
+            "venPkQuantity": 6,
+            "warPkQuantity": 6,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121506988,
+            "intransitQty": 12,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "bebf8240-b7dc-4b95-8cfe-eb2dabb7be4b",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 12
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121506988,
+        "deliveryNumber": "40159894",
+        "destinationLocationId": 6094,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121506988,
+        "loadId": "59470",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000012",
+        "locationName": "RDC6080-E",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236951,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 2.8550000190734863,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZK DBL HORN GRL ASMT",
+            "totalQuantity": 94,
+            "physicalQuantity": 0,
+            "venPkQuantity": 47,
+            "warPkQuantity": 47,
+            "itemUPC": "00768661550943",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121582559,
+            "intransitQty": 94,
+            "rotateDateLong": 1605571200000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "c3817af7-028f-4c6c-ad0c-d76f08aeb829",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              9
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 9,
+                "poQty": 94
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605571200000,
+        "containerCreateDate": 1606121582559,
+        "deliveryNumber": "40153026",
+        "destinationLocationId": 6080,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121582559,
+        "loadId": "59345",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000013",
+        "locationName": "RDC6012-W",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 10,
+            "physicalQuantity": 0,
+            "venPkQuantity": 5,
+            "warPkQuantity": 5,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121489874,
+            "intransitQty": 10,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cbf5800f-cfec-4638-8f5f-290fccfeafc3",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 10
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121489874,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6012,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121489874,
+        "loadId": "59392",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000014",
+        "locationName": "RDC6031-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 20,
+            "physicalQuantity": 0,
+            "venPkQuantity": 10,
+            "warPkQuantity": 10,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121498281,
+            "intransitQty": 20,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cfb7e8b6-1bc4-44c0-b4e0-c49757f633cc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 20
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121498281,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6031,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121498281,
+        "loadId": "59426",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000010",
+        "locationName": "RDC6026-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 8,
+            "physicalQuantity": 0,
+            "venPkQuantity": 4,
+            "warPkQuantity": 4,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121352257,
+            "intransitQty": 8,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "85a5acd0-08dd-49be-a485-e246b6a0d36f",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 8
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121352257,
+        "deliveryNumber": "40132487",
+        "destinationLocationId": 6026,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121352257,
+        "loadId": "59221",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000109",
+        "locationName": "RDC6039-E",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 574278822,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 21.049999237060547,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "FROZEN ACTIVITY TBL",
+            "totalQuantity": 7,
+            "physicalQuantity": 0,
+            "venPkQuantity": 7,
+            "warPkQuantity": 7,
+            "itemUPC": "00192995600294",
+            "poNumbers": [
+              "7320253523"
+            ],
+            "venPkRatio": 1,
+            "warPkRatio": 1,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121515275,
+            "intransitQty": 7,
+            "rotateDateLong": 1605225600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "106cd986-f3f1-49d7-a48d-3b608dd9a185",
+                "orderQty": 1
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              4
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253523",
+                "purchaseReferenceLineNumber": 4,
+                "poQty": 7
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605225600000,
+        "containerCreateDate": 1606121515275,
+        "deliveryNumber": "40171978",
+        "destinationLocationId": 6039,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121515275,
+        "loadId": "59900",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000107",
+        "locationName": "RDC6009-E",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.4925000667572021,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 80,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795801"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121463260,
+            "intransitQty": 80,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "0adf1a71-accb-4fa1-ac19-334347c3d483",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795801",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 80
+              }
+            ]
+          },
+          {
+            "itemNumber": 571236951,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 2.8550000190734863,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZK DBL HORN GRL ASMT",
+            "totalQuantity": 2,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00768661550943",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121463260,
+            "intransitQty": 2,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "18228427-1ee5-4c36-ba30-b0a7486dc1ba",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              9
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 9,
+                "poQty": 2
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605484800000,
+        "containerCreateDate": 1606121463260,
+        "deliveryNumber": "40171978",
+        "destinationLocationId": 6009,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121472374,
+        "loadId": "59543",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000106",
+        "locationName": "RDC6017-E",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.4925000667572021,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 320,
+            "physicalQuantity": 0,
+            "venPkQuantity": 4,
+            "warPkQuantity": 4,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795801"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121440434,
+            "intransitQty": 320,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "79f79872-c711-4f76-acaa-5a64a29979ae",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795801",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 320
+              }
+            ]
+          },
+          {
+            "itemNumber": 571236951,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 2.8550000190734863,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZK DBL HORN GRL ASMT",
+            "totalQuantity": 58,
+            "physicalQuantity": 0,
+            "venPkQuantity": 29,
+            "warPkQuantity": 29,
+            "itemUPC": "00768661550943",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121440434,
+            "intransitQty": 58,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "4f081347-9993-4258-9619-65caa89979be",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              9
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 9,
+                "poQty": 58
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605484800000,
+        "containerCreateDate": 1606121440434,
+        "deliveryNumber": "40163057",
+        "destinationLocationId": 6017,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121452308,
+        "loadId": "59450",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "A06561000010090621",
+        "locationName": "RDC6054-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 8,
+            "physicalQuantity": 0,
+            "venPkQuantity": 4,
+            "warPkQuantity": 4,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606204262954,
+            "intransitQty": 8,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "f09d515c-9e7e-4458-8ec5-b78488d18038",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 8
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606204262954,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6054,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606204262954,
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "A06561000010090622",
+        "locationName": "RDC6012-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.2382500171661377,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 80,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795801"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606204271207,
+            "intransitQty": 80,
+            "rotateDateLong": 1605744000000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "e42da180-5a2c-45e8-8e3c-e40bc47fc046",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              2
+            ],
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795801",
+                "purchaseReferenceLineNumber": 2,
+                "poQty": 80
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605744000000,
+        "containerCreateDate": 1606204271207,
+        "deliveryNumber": "40168222",
+        "destinationLocationId": 6012,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606204271207,
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000054",
+        "locationName": "RDC7036-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.4925000667572021,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 480,
+            "physicalQuantity": 0,
+            "venPkQuantity": 6,
+            "warPkQuantity": 6,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795801"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121388307,
+            "intransitQty": 480,
+            "rotateDateLong": 1605139200000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "86cab241-3341-497d-b087-70b25f9ec261",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795801",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 480
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605139200000,
+        "containerCreateDate": 1606121388307,
+        "deliveryNumber": "40148695",
+        "destinationLocationId": 7036,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121388307,
+        "loadId": "59453",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000008",
+        "locationName": "RDC6092-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 18,
+            "physicalQuantity": 0,
+            "venPkQuantity": 9,
+            "warPkQuantity": 9,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121368394,
+            "intransitQty": 18,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "f965acd4-6597-472a-9ec4-aa5451fc1cdc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 18
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121368394,
+        "deliveryNumber": "40157000",
+        "destinationLocationId": 6092,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121368394,
+        "loadId": "59714",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000009",
+        "locationName": "RDC6035-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 12,
+            "physicalQuantity": 0,
+            "venPkQuantity": 6,
+            "warPkQuantity": 6,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121344375,
+            "intransitQty": 12,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cfb7e8b6-1bc4-44c0-b4e0-c49757f633cc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 12
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121344375,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6035,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121344375,
+        "loadId": "59473",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000092",
+        "locationName": "RDC6011-E",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.4925000667572021,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 80,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795801"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121404792,
+            "intransitQty": 80,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "86291874-50d1-4910-b53d-fffb0838e446",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795801",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 80
+              }
+            ]
+          },
+          {
+            "itemNumber": 571236951,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 2.8550000190734863,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZK DBL HORN GRL ASMT",
+            "totalQuantity": 90,
+            "physicalQuantity": 0,
+            "venPkQuantity": 45,
+            "warPkQuantity": 45,
+            "itemUPC": "00768661550943",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121404792,
+            "intransitQty": 90,
+            "rotateDateLong": 1605484800000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "57ac7e45-b31e-45ef-8b1e-b6edc98daa99",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              9
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 9,
+                "poQty": 90
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605484800000,
+        "containerCreateDate": 1606121404792,
+        "deliveryNumber": "40164293",
+        "destinationLocationId": 6011,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121417195,
+        "loadId": "59600",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000026",
+        "locationName": "RDC6036-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 8,
+            "physicalQuantity": 0,
+            "venPkQuantity": 4,
+            "warPkQuantity": 4,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121426622,
+            "intransitQty": 8,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cfb7e8b6-1bc4-44c0-b4e0-c49757f633cc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 8
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121426622,
+        "deliveryNumber": "40157000",
+        "destinationLocationId": 6036,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121426622,
+        "loadId": "59402",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000005",
+        "locationName": "RDC6080-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 46,
+            "physicalQuantity": 0,
+            "venPkQuantity": 23,
+            "warPkQuantity": 23,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121572620,
+            "intransitQty": 46,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "1a1f2de4-6ffc-4a3a-a6f1-c4623f4be459",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 46
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121572620,
+        "deliveryNumber": "40132487",
+        "destinationLocationId": 6080,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121572620,
+        "loadId": "59345",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000006",
+        "locationName": "RDC6009-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 576410384,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 49.470001220703125,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "INF 2IN1 ENTERTAINER",
+            "totalQuantity": 1,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00773554030020",
+            "poNumbers": [
+              "3615858661"
+            ],
+            "venPkRatio": 1,
+            "warPkRatio": 1,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121564941,
+            "intransitQty": 1,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "8679943f-4ca8-47f8-a48c-08b99241e8f0",
+                "orderQty": 1
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3615858661",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 1
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121564941,
+        "deliveryNumber": "40149869",
+        "destinationLocationId": 6009,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121564941,
+        "loadId": "59543",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000007",
+        "locationName": "RDC7039-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 4,
+            "physicalQuantity": 0,
+            "venPkQuantity": 2,
+            "warPkQuantity": 2,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121360333,
+            "intransitQty": 4,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "7433019d-8534-4a19-a809-7faf090ddf4f",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 4
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121360333,
+        "deliveryNumber": "40157000",
+        "destinationLocationId": 7039,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121360333,
+        "loadId": "59781",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000022",
+        "locationName": "RDC7035-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 16,
+            "physicalQuantity": 0,
+            "venPkQuantity": 8,
+            "warPkQuantity": 8,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121523167,
+            "intransitQty": 16,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "7433019d-8534-4a19-a809-7faf090ddf4f",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 16
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121523167,
+        "deliveryNumber": "40132487",
+        "destinationLocationId": 7035,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121523167,
+        "loadId": "59352",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000023",
+        "locationName": "RDC6039-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 6,
+            "physicalQuantity": 0,
+            "venPkQuantity": 3,
+            "warPkQuantity": 3,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121481393,
+            "intransitQty": 6,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "713c3175-c864-4550-b2b5-68e78a8690ff",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 6
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121481393,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6039,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121481393,
+        "loadId": "59358",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000024",
+        "locationName": "RDC6030-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 20,
+            "physicalQuantity": 0,
+            "venPkQuantity": 10,
+            "warPkQuantity": 10,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121541191,
+            "intransitQty": 20,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cfb7e8b6-1bc4-44c0-b4e0-c49757f633cc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 20
+              }
+            ]
+          },
+          {
+            "itemNumber": 576410384,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 49.470001220703125,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "INF 2IN1 ENTERTAINER",
+            "totalQuantity": 2,
+            "physicalQuantity": 0,
+            "venPkQuantity": 2,
+            "warPkQuantity": 2,
+            "itemUPC": "00773554030020",
+            "poNumbers": [
+              "3615858661"
+            ],
+            "venPkRatio": 1,
+            "warPkRatio": 1,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121541191,
+            "intransitQty": 2,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "c2a5efa3-8d0a-477e-9946-54d91cc3f0f0",
+                "orderQty": 1
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3615858661",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 2
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121541191,
+        "deliveryNumber": "40159894",
+        "destinationLocationId": 6030,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121549281,
+        "loadId": "59691",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000025",
+        "locationName": "RDC6024-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 12,
+            "physicalQuantity": 0,
+            "venPkQuantity": 6,
+            "warPkQuantity": 6,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121557267,
+            "intransitQty": 12,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "4a8c4abf-d13b-4503-b1ed-f244231950fd",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 12
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121557267,
+        "deliveryNumber": "40132487",
+        "destinationLocationId": 6024,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121557267,
+        "loadId": "59281",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000021",
+        "locationName": "RDC6019-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 14,
+            "physicalQuantity": 0,
+            "venPkQuantity": 7,
+            "warPkQuantity": 7,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121327579,
+            "intransitQty": 14,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cfb7e8b6-1bc4-44c0-b4e0-c49757f633cc",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 14
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121327579,
+        "deliveryNumber": "40162064",
+        "destinationLocationId": 6019,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121327579,
+        "loadId": "59171",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000019",
+        "locationName": "RDC7038-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.4925000667572021,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 240,
+            "physicalQuantity": 0,
+            "venPkQuantity": 3,
+            "warPkQuantity": 3,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795717"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121533100,
+            "intransitQty": 240,
+            "rotateDateLong": 1605571200000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "cdcf0497-4fc0-4852-b56c-ebd777fb4208",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795717",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 240
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605571200000,
+        "containerCreateDate": 1606121533100,
+        "deliveryNumber": "40155190",
+        "destinationLocationId": 7038,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121533100,
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000016",
+        "locationName": "RDC6048-W",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 8,
+            "physicalQuantity": 0,
+            "venPkQuantity": 4,
+            "warPkQuantity": 4,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121319094,
+            "intransitQty": 8,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "713c3175-c864-4550-b2b5-68e78a8690ff",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 8
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121319094,
+        "deliveryNumber": "40152342",
+        "destinationLocationId": 6048,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121319094,
+        "loadId": "59480",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "N06561000010000080",
+        "locationName": "RDC7026-E",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 584212117,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 1.492498755455017,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "IFLY 5PC FACE MASK",
+            "totalQuantity": 160,
+            "physicalQuantity": 0,
+            "venPkQuantity": 2,
+            "warPkQuantity": 2,
+            "itemUPC": "00061623354680",
+            "poNumbers": [
+              "3765795906"
+            ],
+            "venPkRatio": 80,
+            "warPkRatio": 80,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121395571,
+            "intransitQty": 160,
+            "rotateDateLong": 1605225600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "b668da0f-cec2-41ea-8fe5-3e8a1cd897ac",
+                "orderQty": 80
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              1
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "3765795906",
+                "purchaseReferenceLineNumber": 1,
+                "poQty": 160
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605225600000,
+        "containerCreateDate": 1606121395571,
+        "deliveryNumber": "40153375",
+        "destinationLocationId": 7026,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121395571,
+        "loadId": "58437",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000017",
+        "locationName": "RDC6011-W",
+        "orgUnitId": 0,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236964,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 5.144999980926514,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZEF DLX UNDRSEAT BAG",
+            "totalQuantity": 2,
+            "physicalQuantity": 0,
+            "venPkQuantity": 1,
+            "warPkQuantity": 1,
+            "itemUPC": "00768661550622",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121310579,
+            "intransitQty": 2,
+            "rotateDateLong": 1605657600000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "f9850055-5a44-4421-8edc-dcf83459bd11",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              12
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 12,
+                "poQty": 2
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605657600000,
+        "containerCreateDate": 1606121310579,
+        "deliveryNumber": "40154785",
+        "destinationLocationId": 6011,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121310579,
+        "loadId": "59600",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  },
+  {
+    "messages": [],
+    "containerInventories": [
+      {
+        "trackingId": "M06561000010000018",
+        "locationName": "RDC6092-E",
+        "orgUnitId": 9,
+        "containerStatus": "IN_TRANSIT",
+        "childContainerIds": [],
+        "childContainersTrackingIdStatusMap": {},
+        "childContainerDetails": [],
+        "items": [
+          {
+            "itemNumber": 571236951,
+            "netItemWeight": 0.0,
+            "itemUnitCost": 2.8550000190734863,
+            "purchaseCompanyId": 1001,
+            "financialReportingGroup": "US",
+            "baseDivisionCode": "WM",
+            "itemDesc": "ZK DBL HORN GRL ASMT",
+            "totalQuantity": 70,
+            "physicalQuantity": 0,
+            "venPkQuantity": 35,
+            "warPkQuantity": 35,
+            "itemUPC": "00768661550943",
+            "poNumbers": [
+              "7320253339"
+            ],
+            "venPkRatio": 2,
+            "warPkRatio": 2,
+            "createUserId": "SYSADMIN",
+            "createDateLong": 1606121378062,
+            "intransitQty": 70,
+            "rotateDateLong": 1605571200000,
+            "baseUri": "",
+            "baseItemUri": "",
+            "poType": "CROSSNMA",
+            "channelType": "CROSSNMA",
+            "orderDetails": [
+              {
+                "orderId": "e3137f30-b4fc-4cf5-9fb2-d2a54ae8aa9a",
+                "orderQty": 2
+              }
+            ],
+            "itemQtyUOM": "EACHES",
+            "purchaseReferenceLineNumbers": [
+              9
+            ],
+            "promoBuyInd": "N",
+            "returnOrderLineNumber": 0,
+            "saleOrderLineNumber": 0,
+            "podetails": [
+              {
+                "poNum": "7320253339",
+                "purchaseReferenceLineNumber": 9,
+                "poQty": 70
+              }
+            ]
+          }
+        ],
+        "createUserId": "SYSADMIN",
+        "rotateDate": 1605571200000,
+        "containerCreateDate": 1606121378062,
+        "deliveryNumber": "40154635",
+        "destinationLocationId": 6092,
+        "isShippable": true,
+        "isReusable": false,
+        "lastChangeUserId": "SYSADMIN",
+        "lastChangeDate": 1606121378062,
+        "loadId": "59714",
+        "doorNumber": ""
+      }
+    ],
+    "totalTraysOnHoldForPallet": null,
+    "links": []
+  }
+]
