@@ -1,0 +1,40 @@
+version: '2.4'
+services:
+  kafka:
+    image: landoop/fast-data-dev
+    ports:
+      - "2181:2181"
+      - "3030:3030"
+      - "3031:3031"
+      - "9092:9092"
+      - "8081:8081"
+      - "8082:8082"
+      - "8083:8083"
+    container_name: kafka
+    environment:
+      - ADV_HOST=127.0.0.1
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    ports:
+      - 1433:1433
+    container_name: mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=A_Str0ng_Required_Password
+    volumes:
+      - /Users/a0s01hy/Library/Application Support/JetBrains/IntelliJIdea2020.3/scratches/wmutil/shared:/shared
+
+  amq:
+    image: rmohr/activemq
+    ports:
+      - 61616:61616
+      - 8161:8161
+    container_name: amq
+
+  wiremock:
+    image: rodolpheche/wiremock
+    ports:
+      - 8151:8080
+    container_name: wiremock
+
