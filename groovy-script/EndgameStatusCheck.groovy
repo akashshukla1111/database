@@ -1,5 +1,43 @@
 import groovy.sql.Sql
 
+
+class EndgameStatusCheck {
+    static void main(String[] args) {
+        Map resultot = getSQL(Properties.OT_DB, Properties.OT_SQL)
+        Map result = getSQL(Properties.OP_DB, Properties.OP_SQL)
+//    Map result = getOTSQL(Properties.FES_DB,Properties.FES_SQL)
+        Map out = [:]
+        List list = []
+        resultot.forEach((k, v) -> {
+            if (result.containsKey(k) && result.get(k) != resultot.get(k)) {
+                out.put(k, [resultot.get(k), result.get(k), result.get(k) == resultot.get(k)])
+            }
+        })
+
+        result.forEach((k, v) -> {
+            if (!resultot.containsKey(k)) {
+                list.add(k)
+            }
+        })
+        println 'picks status check'
+        println out
+        println 'picks only present in Other system(OP/FES)'
+        println list
+
+    }
+
+    static Map getSQL(var propInput, String sqlQ) {
+        def sql = Sql.newInstance(propInput[0], propInput[1], propInput[2], 'com.microsoft.sqlserver.jdbc.SQLServerDriver')
+        Map<String, Object> result = [:]
+        sql.eachRow(sqlQ) { row ->
+            result.put(row[0], row[1])
+        }
+        sql.close()
+        return result
+    }
+
+}
+
 class Properties {
     static var OT_DB = ['jdbc:sqlserver://azrilbglsotdr.cloud.wal-mart.com:14482;database=order_tracker', 'glsot', 'NHc>34GwK']
     static var OP_DB = ['jdbc:sqlserver://azrilbGLSOprod1.cloud.wal-mart.com:14482;database=order_alloc', 'glsop', 'NHc>34GwK']
@@ -33,38 +71,4 @@ where ESTIMATED_SHIPPING_TS > '2021-10-22 00:00:00.0000000' and ESTIMATED_SHIPPI
   and facility_num = 4034
   and facility_country_code = 'US'
 """
-}
-
-static void main(String[] args) {
-    Map resultot = getSQL(Properties.OT_DB, Properties.OT_SQL)
-    Map result = getSQL(Properties.OP_DB, Properties.OP_SQL)
-//    Map result = getOTSQL(Properties.FES_DB,Properties.FES_SQL)
-    Map out = [:]
-    List list = []
-    resultot.forEach((k, v) -> {
-        if (result.containsKey(k) && result.get(k) != resultot.get(k)) {
-            out.put(k, [resultot.get(k), result.get(k), result.get(k) == resultot.get(k)])
-        }
-    })
-
-    result.forEach((k, v) -> {
-        if (!resultot.containsKey(k)) {
-            list.add(k)
-        }
-    })
-    println 'picks status check'
-    println out
-    println 'picks only present in Other system(OP/FES)'
-    println list
-
-}
-
-static Map getSQL(var propInput, String sqlQ) {
-    def sql = Sql.newInstance(propInput[0], propInput[1], propInput[2], 'com.microsoft.sqlserver.jdbc.SQLServerDriver')
-    Map<String, Object> result = [:]
-    sql.eachRow(sqlQ) { row ->
-        result.put(row[0], row[1])
-    }
-    sql.close()
-    return result
 }

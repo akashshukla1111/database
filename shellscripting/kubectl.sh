@@ -52,4 +52,14 @@ kubectl describe pod order-tracker-qa-cell000-6d78fc76f4-8gcjg
 
 # duplicate remove --> ^(.*)(\r?\n\1)+$
 
+#kafka-topics --create --zookeeper localhost:2181 --replication-factor 1 --partitions 3 --topic hawkeye-dev-amr-hvfc-fulfillment-response-status-update
+#kafka-consumer-groups --bootstrap-server 'localhost:9092' --describe --group GLS-FES-DEV-GO-STATUS-UPDATE --members --verbose
+
+
+#sledge connect uscentral-stage-wmt-001 && kubectl get pods -n atlas-ot --selector app.kubernetes.io/name=order-tracker  -o jsonpath='{.items[*].metadata.labels}' | jq -c  | jtbl
+
+
+
+#kafka-console-producer --broker-list 'kafka-1052450285-1-1269647919.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-2-1269647922.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-3-1269647925.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-4-1269647928.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-5-1269647931.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-6-1269647934.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093' --producer.config /private/etc/secrets/kafka-secure-producer.properties --topic EGLS_CUTOVER_INV_PROD
+
 

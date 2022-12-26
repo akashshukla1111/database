@@ -1,0 +1,16 @@
+{
+  "fulfillmentId": "31c46944-db14-425b-972d-19276c222ee5",
+  "fulfillmentStatus": "COMPLETED",
+  "fulfillmentUnits": [
+    {
+      "fulfillmentUnitId": "941836ce-6f57-4a8f-8977-79050d60bb66",
+      "consumableGtin": "0007874215805",
+      "sellerId": "wm",
+      "quantityUom": "EA",
+      "fulfilledQty": 1,
+      "origQuantity": 1,
+      "missedQty": 0
+    }
+  ],
+  "lastUpdatedTs": "2021-03-13T07:33:50.324Z"
+}

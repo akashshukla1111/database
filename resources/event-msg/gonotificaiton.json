@@ -1,0 +1,17 @@
+{
+  "fulfillmentId": "23c87db2-4f05-4274-a575-3a3011a5cbb8",
+  "fulfillmentUnits": [{
+    "consumableGtin": "0007874215805",
+    "sellerId": "wm",
+    "fulfillmentUnitStatus": "PICKED",
+    "quantityUom": "EA",
+    "fulfilledQty": 1,
+    "damagedQty": 0,
+    "missedQty": 0,
+    "sourceContainerId": "MSUSLOTID15805",
+    "pickedContainerId": "PPSBINID15805",
+    "workstationId": "PPSSTATIONID15805",
+    "userId": "a0s01hy",
+    "lastUpdatedTs": "2022-10-11T07:33:50.324Z"
+  }]
+}
