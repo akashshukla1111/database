@@ -48,7 +48,7 @@
 #kubectl describe deploy order-tracker-qa-cell000
 #kubectl get pods -n atlas-ot
 #kubectl get pods -l app=order-tracker-qa-cell000
-kubectl describe pod order-tracker-qa-cell000-6d78fc76f4-8gcjg
+#kubectl describe pod order-tracker-qa-cell000-6d78fc76f4-8gcjg
 
 # duplicate remove --> ^(.*)(\r?\n\1)+$
 
@@ -63,3 +63,12 @@ kubectl describe pod order-tracker-qa-cell000-6d78fc76f4-8gcjg
 #kafka-console-producer --broker-list 'kafka-1052450285-1-1269647919.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-2-1269647922.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-3-1269647925.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-4-1269647928.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-5-1269647931.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093,kafka-1052450285-6-1269647934.scus.kafka-v2-atlas-scus-wus-prod.ms-df-messaging.prod-az-southcentralus-25.prod.us.walmart.net:9093' --producer.config /private/etc/secrets/kafka-secure-producer.properties --topic EGLS_CUTOVER_INV_PROD
 
 
+grep -r --include '*default.yml' 'cluster_id' ~/work/
+#sledge connect uscentral-stage-az-12 && kubectl get pods -n atlas-ndop --selector app.kubernetes.io/name=order-services -o jsonpath='{.items[*].metadata.labels}' | jq -c
+#sledge connect uscentral-stage-wmt-001 && kubectl get pods -n atlas-ndop --selector app.kubernetes.io/name=allocation-order-service -o jsonpath='{.items[*].metadata.labels}' | jq -c | jtbl
+#sledge connect uscentral-stage-wmt-001
+
+#sledge wcnp describe cluster eus2-prod-a52
+#sledge wcnp describe namespace atlas-ndof
+#sledge wcnp describe app fulfillment-execution-service -n atlas-ndof -c scus-dev-a3
+#sledge wcnp describe app allocation-order-service -n atlas-ndof

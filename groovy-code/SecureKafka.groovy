@@ -7,7 +7,6 @@ import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeader
 
 import java.time.Duration
-
 import static PropertiesUtil.CONSUMER_DIE_TIME_SEC
 import static PropertiesUtil.readEventJsonFile
 import static PropertiesUtil.convertToString
@@ -22,17 +21,17 @@ class SecureKafka {
         if (!args) throw new RuntimeException("please pass proper arguments. for producer -P , for consumer -C")
         loadConfig()
         if ("-P".equalsIgnoreCase(args[0])) {
-            sk.publishKafkaMsg()
+            def records = getRecords readEventJsonFile()
+            sk.publishKafkaMsg(records)
         } else if ("-C".equalsIgnoreCase(args[0])) {
             if (args.size() < 2) throw new RuntimeException("please pass the topic as 2nd argument and group id 3rd, [ ex: java -jar your_jar.jar -C your_topic group_id(optional) ] ")
             sk.consumerMessage(args[1], (args.size() > 2) ? args[2] : "${args[1]}_groupId")
         }
     }
 
-    private void publishKafkaMsg() {
-        def records = getRecords readEventJsonFile()
+    private void publishKafkaMsg(def records) {
         boolean hasMoreMsg = hasProceed(records)
-        if (hasMoreMsg) records.forEach((record) -> {
+        if (hasMoreMsg) records.flatten().forEach((record) -> {
             try {
                 def producer = new KafkaProducer<String, String>(System.getProperties())
                 producer.withCloseable {
@@ -41,7 +40,7 @@ class SecureKafka {
                     String body = convertToString record['body']
                     Map<String, Object> headers = record['headers']
 
-                    println "Producing record: $topic\t $key\t $body\n $headers"
+                    println "Producing record to TOPIC -> $topic\t KEY -> $key\n HEADER -> $headers\n PAYLOAD -> $body"
                     def producerRecord = new ProducerRecord<String, String>(topic, key, body)
                     Headers hd = producerRecord.headers();
                     headers.forEach((k, value) -> hd.add(new RecordHeader(k, String.valueOf(value).getBytes())));
@@ -68,7 +67,6 @@ class SecureKafka {
                 println e.getMessage()
             }
         })
-
     }
 
     private boolean hasProceed(List records) {
