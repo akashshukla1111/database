@@ -4,7 +4,7 @@
 #
 #    find /Users/a0s01hy/work \( -path "*/allocation-order-service/kitt-config/*" -o -path "*/ndof-trip-execution/kitt-config/*" -o -path "*/inventory-server-cloud/kitt-config/*" \) -type f \( -name "us-wm-fc.yml" -o -name "us-wm-ambient.yml" -o -name "us-wm-default.yml" \) -exec grep -H -e "artifact:" -e "matchStages:" -e "namespace:" {} + | sed 's/ //g; s/\[//g; s/\]//g' | sed 's/:/ /g' | awk 'BEGIN {
 #}
-#{
+#   {
 #    if ($2 == "artifact") {
 #        artifact[$1] = $3
 #    } else if ($2 == "namespace") {

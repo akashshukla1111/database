@@ -31,29 +31,29 @@ class SecureKafka {
 
     private void publishKafkaMsg(def records) {
         boolean hasMoreMsg = hasProceed(records)
+        def count = 0
+        def producer = new KafkaProducer<String, String>(System.getProperties())
         if (hasMoreMsg) records.flatten().forEach((record) -> {
             try {
-                def producer = new KafkaProducer<String, String>(System.getProperties())
-                producer.withCloseable {
-                    String topic = record['topic']
-                    String key = record['key'] ?: ''
-                    String body = convertToString record['body']
-                    Map<String, Object> headers = record['headers']
-
-                    println "Producing record to TOPIC -> $topic\t KEY -> $key\n HEADER -> $headers\n PAYLOAD -> $body"
-                    def producerRecord = new ProducerRecord<String, String>(topic, key, body)
-                    Headers hd = producerRecord.headers();
-                    headers.forEach((k, value) -> hd.add(new RecordHeader(k, String.valueOf(value).getBytes())));
-                    producer.send producerRecord, { RecordMetadata metadata, Exception e ->
-                        if (e) {
-                            e.printStackTrace()
-                        } else {
-                            println "Produced record to topic ${metadata.topic()} partition [${metadata.partition()}] @ offset ${metadata.offset()}\n"
-                        }
+                String topic = record['topic'] ?: System.getProperty('topic')
+                String key = record['key'] ?: ''
+                String body = convertToString record['value']
+                Map<String, Object> headers = record['headers']
+                count = count + 1
+                println "count $count\tProducing record to TOPIC -> $topic\t KEY -> $key\n HEADER -> $headers\n PAYLOAD -> $body"
+                def producerRecord = new ProducerRecord<String, String>(topic, key, body)
+                Headers hd = producerRecord.headers();
+                headers.forEach((k, value) -> hd.add(new RecordHeader(k, String.valueOf(value).getBytes())));
+                producer.send producerRecord, { RecordMetadata metadata, Exception e ->
+                    if (e) {
+                        e.printStackTrace()
+                    } else {
+                        println "Produced record to topic ${metadata.topic()} partition [${metadata.partition()}] @ offset ${metadata.offset()}\n"
                     }
-                    producer.flush()
                 }
+                producer.flush()
             } catch (Exception e) {
+                println e.getMessage()
                 def msg = """
                      -Dssl.truststore.location=/etc/secrets/gls-atlas-fes-api-kafka.nonprod.walmart.com.jks
                      -Dssl.truststore.password=Walmart@1234
@@ -64,9 +64,10 @@ class SecureKafka {
                      -Dsecurity.protocol=SSL
                 """
                 println "please check kafka config: Either pass by VM args \t ${msg}\t\t OR file location -Dconfig.additional-location='your_file_location'"
-                println e.getMessage()
             }
         })
+
+
     }
 
     private boolean hasProceed(List records) {
