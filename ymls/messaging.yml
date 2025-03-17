@@ -1,4 +1,4 @@
-version: '2'
+version: '2.4'
 services:
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -44,31 +44,3 @@ services:
 #    ports:
 #      - 8161:8161
 #      - 61616:61616
-
-# https://hub.docker.com/r/microsoft/azure-storage-azurite
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite
-    container_name: azurite
-    ports:
-      - "10000:10000"
-      - "10001:10001"
-      - "10002:10002"
-    restart: unless-stopped
-
-  azurite-new:
-    image: mcr.microsoft.com/azure-storage/azurite
-    container_name: azurite-11000
-    ports:
-      - "11000:10000"
-      - "11001:10001"
-      - "11002:10002"
-    restart: unless-stopped
-
-  azurite-2:
-    image: mcr.microsoft.com/azure-storage/azurite
-    container_name: azurite-12000
-    ports:
-      - "12000:10000"
-      - "12001:10001"
-      - "12002:10002"
-    restart: unless-stopped
