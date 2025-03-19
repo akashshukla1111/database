@@ -15,8 +15,8 @@ services:
     image: google/cloud-sdk:latest
     container_name: gcloud-spanner
     environment:
-      - PROJECT_ID=wmt-endgame-prod
-      - INSTANCE_ID=atlas-platform
+      - PROJECT_ID=gcloud-spanner
+      - INSTANCE_ID=local
       - DATABASE_ID=atlas-flow-iq
       - SPANNER_EMULATOR_HOST=0.0.0.0:9010  # Ensure it's accessible externally
     ports:
