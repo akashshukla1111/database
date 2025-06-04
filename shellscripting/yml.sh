@@ -15,9 +15,7 @@ namespace() {
   local env="${1-default}"
   # Capture the output into the global variable
   find /Users/a0s01hy/work \( \
-    -path "*/allocation-order-service/kitt-config/*" \
-    -o -path "*/ndof-trip-execution/kitt-config/*" \
-    -o -path "*/inventory-server-cloud/kitt-config/*" \
+    -path "*/kitt-config/*" \
     \) -type f \( -name "us-wm-${env}.yml" \) -exec grep -H -e "artifact:" -e "matchStages:" -e "namespace:" {} + |
     sed 's/ //g; s/\[//g; s/\]//g' |
     sed 's/:/ /g' |
@@ -87,3 +85,8 @@ ${BIPurple}RUN:[ version fes qa fc / v fes qa fc ]"
 
 }
 alias v=version
+
+sv() {
+ echo -e "${IPurple}Running ${BGreen}sledge wcnp describe app ${1} -n ${2}"
+ sledge wcnp describe app ${1} -n ${2}
+}
