@@ -10,6 +10,7 @@ FILE_PATTERNS=()
 OPEN_OPTION=false
 RECURSIVE=false
 STRICT_SEARCH=false
+CASE_SENSITIVE=false
 
 # Function to display usage
 show_help() {
@@ -21,8 +22,21 @@ show_help() {
     echo "  -f <folder>       Folder specification (comma-separated)"
     echo "  -r                Enable recursive search"
     echo "  -s                Enable strict search (exact filename matches only)"
+    echo "  -c                Enable case-sensitive search"
     echo "  -o                Enable interactive file opening"
     echo "  -h                Show this help message"
+    echo ""
+    echo -e "${GREEN}Combined Flags:${NC}"
+    echo "  -cs, -sc          Case-sensitive + strict search"
+    echo "  -cr, -rc          Case-sensitive + recursive search"
+    echo "  -sr, -rs          Strict + recursive search"
+    echo "  -csr, -crs, etc.  Case-sensitive + strict + recursive search"
+    echo ""
+    echo -e "${GREEN}Search Behavior:${NC}"
+    echo "  Default: Case-insensitive partial filename matching"
+    echo "  With -s: Exact filename matching (still case-insensitive unless -c is used)"
+    echo "  With -c: Case-sensitive search (can be combined with -s)"
+    echo "  With -s -c: Case-sensitive exact filename matching"
     echo ""
     echo -e "${GREEN}Folder Syntax:${NC}"
     echo "  a,b,c/x,y/p,r               - Multi-level hierarchical expansion"
@@ -142,13 +156,21 @@ smart_folder_search() {
                     
                     # First try acronym pattern matching
                     if [[ "$pattern" == *"*"* ]]; then
-                        found_dirs=$(find "$current_path" -maxdepth $search_depth -type d -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                        if [[ "$CASE_SENSITIVE" == true ]]; then
+                            found_dirs=$(find "$current_path" -maxdepth $search_depth -type d -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                        else
+                            found_dirs=$(find "$current_path" -maxdepth $search_depth -type d -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                        fi
                     else
                         found_dirs=""
                     fi
                     
                     # Always try partial/full name matching as well to ensure we don't miss exact matches
-                    local partial_dirs=$(find "$current_path" -maxdepth $search_depth -type d -name "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                    if [[ "$CASE_SENSITIVE" == true ]]; then
+                        local partial_dirs=$(find "$current_path" -maxdepth $search_depth -type d -name "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                    else
+                        local partial_dirs=$(find "$current_path" -maxdepth $search_depth -type d -iname "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                    fi
                     
                     # Combine results from both searches
                     if [[ -n "$found_dirs" ]] && [[ -n "$partial_dirs" ]]; then
@@ -184,13 +206,21 @@ smart_folder_search() {
             
             # First try acronym pattern matching
             if [[ "$pattern" == *"*"* ]]; then
-                found_dirs=$(find "$search_path" -maxdepth $search_depth -type d -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                if [[ "$CASE_SENSITIVE" == true ]]; then
+                    found_dirs=$(find "$search_path" -maxdepth $search_depth -type d -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                else
+                    found_dirs=$(find "$search_path" -maxdepth $search_depth -type d -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+                fi
             else
                 found_dirs=""
             fi
             
             # Always try partial/full name matching as well to ensure we don't miss exact matches
-            local partial_dirs=$(find "$search_path" -maxdepth $search_depth -type d -name "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+            if [[ "$CASE_SENSITIVE" == true ]]; then
+                local partial_dirs=$(find "$search_path" -maxdepth $search_depth -type d -name "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+            else
+                local partial_dirs=$(find "$search_path" -maxdepth $search_depth -type d -iname "*$item*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null)
+            fi
             
             # Combine results from both searches
             if [[ -n "$found_dirs" ]] && [[ -n "$partial_dirs" ]]; then
@@ -302,21 +332,39 @@ max_performance_search() {
                         local extension="${pattern##*.}"
                         
                         if [[ "$STRICT_SEARCH" == true ]]; then
-                            # Strict search - only exact filename matches
-                            find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            # Strict search - exact filename matches only
+                            if [[ "$CASE_SENSITIVE" == true ]]; then
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            else
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            fi
                         else
                             # Regular search - exact match and partial matches
-                            find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
-                            # Search for files containing basename with same extension
-                            find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "*${basename}*.${extension}" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            if [[ "$CASE_SENSITIVE" == true ]]; then
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                                # Search for files containing basename with same extension
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "*${basename}*.${extension}" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            else
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                                # Search for files containing basename with same extension (case-insensitive)
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -iname "*${basename}*.${extension}" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            fi
                         fi
                     else
                         if [[ "$STRICT_SEARCH" == true ]]; then
-                            # Strict search - only exact filename matches
-                            find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            # Strict search - exact filename matches only
+                            if [[ "$CASE_SENSITIVE" == true ]]; then
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            else
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            fi
                         else
                             # Regular search - partial filename match
-                            find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "*${pattern}*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            if [[ "$CASE_SENSITIVE" == true ]]; then
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -name "*${pattern}*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            else
+                                find "$folder_path" -maxdepth "$search_maxdepth" -type f -iname "*${pattern}*" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null >> "$results_file"
+                            fi
                         fi
                     fi
                 done
@@ -332,13 +380,21 @@ max_performance_search() {
         # Search entire directory
         if [[ -n "$regex_pattern" ]]; then
             if [[ "$STRICT_SEARCH" == true ]]; then
-                # Strict search - only exact filename matches
+                # Strict search - exact filename matches only
                 for pattern in "${file_patterns[@]}"; do
-                    find "$search_path" -maxdepth "$maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null
+                    if [[ "$CASE_SENSITIVE" == true ]]; then
+                        find "$search_path" -maxdepth "$maxdepth" -type f -name "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null
+                    else
+                        find "$search_path" -maxdepth "$maxdepth" -type f -iname "$pattern" -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null
+                    fi
                 done
             else
                 # Regular search with regex pattern
-                find "$search_path" -maxdepth "$maxdepth" -type f -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null | grep -E "$regex_pattern"
+                if [[ "$CASE_SENSITIVE" == true ]]; then
+                    find "$search_path" -maxdepth "$maxdepth" -type f -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null | grep -E "$regex_pattern"
+                else
+                    find "$search_path" -maxdepth "$maxdepth" -type f -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null | grep -iE "$regex_pattern"
+                fi
             fi
         else
             find "$search_path" -maxdepth "$maxdepth" -type f -not -path "*/.*" -not -path "*/node_modules/*" -not -path "*/target/*" -not -path "*/build/*" -not -path "*/.git/*" 2>/dev/null
@@ -511,6 +567,31 @@ while [[ $# -gt 0 ]]; do
             STRICT_SEARCH=true
             shift
             ;;
+        -c)
+            CASE_SENSITIVE=true
+            shift
+            ;;
+        -cs|-sc)
+            CASE_SENSITIVE=true
+            STRICT_SEARCH=true
+            shift
+            ;;
+        -cr|-rc)
+            CASE_SENSITIVE=true
+            RECURSIVE=true
+            shift
+            ;;
+        -sr|-rs)
+            STRICT_SEARCH=true
+            RECURSIVE=true
+            shift
+            ;;
+        -csr|-crs|-scr|-src|-rcs|-rsc)
+            CASE_SENSITIVE=true
+            STRICT_SEARCH=true
+            RECURSIVE=true
+            shift
+            ;;
         -o)
             OPEN_OPTION=true
             shift
@@ -553,7 +634,7 @@ SEARCH_DIR=$(cd "$SEARCH_DIR" && pwd)
 stop_loading
 
 # Display search parameters
-echo -e "${BLUE}Directory:${NC} $SEARCH_DIR ${BLUE}|${NC} ${GREEN}Folder Specs:${NC} ${FOLDER_SPECS[*]:-'(none)'} ${BLUE}|${NC} ${GREEN}Files:${NC} ${FILE_PATTERNS[*]:-'(none)'} ${BLUE}|${NC} ${GREEN}Recursive:${NC} $RECURSIVE ${BLUE}|${NC} ${GREEN}Strict:${NC} $STRICT_SEARCH"
+echo -e "${BLUE}Directory:${NC} $SEARCH_DIR ${BLUE}|${NC} ${GREEN}Folder Specs:${NC} ${FOLDER_SPECS[*]:-'(none)'} ${BLUE}|${NC} ${GREEN}Files:${NC} ${FILE_PATTERNS[*]:-'(none)'} ${BLUE}|${NC} ${GREEN}Recursive:${NC} $RECURSIVE ${BLUE}|${NC} ${GREEN}Strict:${NC} $STRICT_SEARCH ${BLUE}|${NC} ${GREEN}Case Sensitive:${NC} $CASE_SENSITIVE"
 echo ""
 
 # Perform the search

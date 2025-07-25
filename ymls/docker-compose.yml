@@ -20,3 +20,11 @@ services:
       - 8151:8080
     container_name: wiremock
 
+  sonarqube:
+    image: sonarqube:7.9.6-community
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    restart: unless-stopped
