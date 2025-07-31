@@ -12,7 +12,7 @@ alias qa='fs -frs wms-receiving,gdm,os,aos,nte,loading/fc,us-wm-fc us-wm-fc.yml 
 alias default='fs -frs wms-receiving,gdm,os,aos,nte,loading/fc,default-fc fc-pre-main-merge.yml | search default,stg -s'
 
 function rcv() {
-  echo "fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | search $1 -s"
+  echo "$log 'fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | search $2 -s'"
   fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | search $1 -s
 }
 function gdm() {
@@ -41,24 +41,35 @@ function loading() {
 }
 
 function v() {
-  case "$2" in
-    i)
-      echo "fs -frs wms-receiving,gdm,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml | ss $1 -s"
-      fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml | ss $1 -s;;
-    o)
-      echo "fs -frs os,aos,nte,loading,isc/fc,us-wm-fc us-wm-fc.yml | ss $1 -s"
-      fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml | ss $1 -s;;
-    ui)
-      echo "fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml | ss $1 -s"
-      fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml | ss $1 -s ;;
-    io)
-      echo "fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml | ss $1 -s"
-            fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml | ss $1 -s;;
-    ioui)
-      echo "fs -frs wms-receiving,gdm,os,aos,nte,loading,isc,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | ss $1 -s"
-      fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | ss $1 -s;;
-    *)
-     echo "fs -frs wms-receiving,gdm,os,aos,nte,loading,isc,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | ss $1 -s"
-           fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | ss $1 -s;;
+  log="running command for $1 with stages $2 -->"
+  search_cmd="search $2 $3"
+  
+  case "$1" in
+    -rcv | rcv )
+      # echo "$log [fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | $search_cmd]"
+      # fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+    -inb | inb  )
+      # echo "$log [fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml | $search_cmd]"
+      # fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml";;    
+    -outb | outb )
+      # echo "$log [fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml | $search_cmd]"
+      # fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml";;
+    ui | -ui)
+      # echo "$log [fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml | $search_cmd]"
+      # fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml";;
+    inout | -inout)
+      # echo "$log [fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml | $search_cmd]"
+      # fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml";;
+    -all | all | * )
+      # echo "$log [fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | $search_cmd]"
+      # fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml | eval "$search_cmd";;
+      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml";;
   esac
+      echo "$log [$find_cmd | $search_cmd]"
+      eval "$find_cmd" | eval $search_cmd 
 }
