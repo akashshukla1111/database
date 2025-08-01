@@ -1,7 +1,7 @@
 # Aliases for version checking commands
 # Add these to your ~/.zshrc file
 
-source .helpers.sh
+source .helper.sh
 
 # UI version - check decant-api, gdm-web with qa,default,stg environments
 alias ui='fs -frs gdm-web,idc,decant-api,isc/us-wm-fc,us-wm-manual-fc,default-fc us-wm-manual-fc.yml,us-wm-fc.yml,default-fc-stg.yml,fc-pre-main-merge.yml,default-fc.yml | ss qa,test,default,stg -s'
