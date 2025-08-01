@@ -23,6 +23,18 @@ STD_PUR='\033[0;35m'    # Standard Purple
 STD_CYN='\033[0;36m'    # Standard Cyan
 STD_WHT='\033[0;37m'    # Standard White
 
+
+BRI_BLK='\033[1;30m'    # Bright Black (Gray)
+BRI_RED='\033[1;31m'    # Bright Red
+BRI_GRN='\033[1;32m'    # Bright Green
+BRI_YEL='\033[1;33m'    # Bright Yellow
+BRI_BLU='\033[1;34m'    # Bright Blue
+BRI_PUR='\033[1;35m'    # Bright Purple
+BRI_CYN='\033[1;36m'    # Bright Cyan
+BRI_WHT='\033[1;37m'    # Bright White
+
+
+
 # Global loading animation variables
 LOADING_PID=""
 LOADING_ACTIVE=false
