@@ -74,178 +74,103 @@ extract_yaml_info() {
   local env_filter="$2"
   local temp_file="$3"
   
-  # Start loading animation for file processing
-  start_loading "Processing YAML files..."
+  # Quick check if we have any input at all
+  [[ -z "$file_list" ]] && return 1
   
-  # Collect all valid YAML files first
+  # Collect all valid YAML files first (optimized filtering)
   local yaml_files=()
   while IFS= read -r file_path; do
-    # Skip empty lines or lines that don't look like file paths
-    [[ -z "$file_path" ]] && continue
-    [[ "$file_path" == *"Found"* ]] && continue
-    [[ "$file_path" == *"Directory:"* ]] && continue
-    [[ "$file_path" == *"Searching"* ]] && continue
-    [[ "$file_path" == *"Completed"* ]] && continue
+    # Skip empty lines and common non-file patterns in one check
+    [[ -z "$file_path" || "$file_path" == *"Found"* || "$file_path" == *"Directory:"* || "$file_path" == *"Searching"* || "$file_path" == *"Completed"* ]] && continue
     
-    # Only add valid YAML files
-    if [[ "$file_path" == *".yml" ]] && [[ -f "$file_path" ]]; then
-      yaml_files+=("$file_path")
-    fi
+    # Only add valid YAML files (check extension and existence)
+    [[ "$file_path" == *".yml" && -f "$file_path" ]] && yaml_files+=("$file_path")
   done <<< "$file_list"
   
-  # Process all files in a single AWK call for much better performance
-  if [[ ${#yaml_files[@]} -gt 0 ]]; then
-    awk -v env_filter="$env_filter" -v temp_file="$temp_file" '
-      BEGIN { 
-        in_lbRoutings = 0; 
-        in_stages = 0;
-        in_target = 0;
-        current_stage = "";
-        stages = ""; 
-        artifact = ""; 
-        namespace = ""; 
-        cluster = "";
-        stage_cluster_map = "";
+  # Early return if no valid files found
+  [[ ${#yaml_files[@]} -eq 0 ]] && return 1
+  
+  # Determine output mode based on temp file name (show_mode detection)
+  local is_show_mode=false
+  [[ "$temp_file" == *"show_mode"* ]] && is_show_mode=true
+  
+  # Process each file individually for better compatibility and performance
+  for yaml_file in "${yaml_files[@]}"; do
+    awk -v env_filter="$env_filter" -v is_show_mode="$is_show_mode" '
+      BEGIN {
+        in_stages = in_target = 0
+        current_stage = stages = artifact = namespace = cluster = stage_cluster_map = ""
       }
-      # Reset variables when starting a new file
-      FNR == 1 {
-        in_lbRoutings = 0; 
-        in_stages = 0;
-        in_target = 0;
-        current_stage = "";
-        stages = ""; 
-        artifact = ""; 
-        namespace = ""; 
-        cluster = "";
-        stage_cluster_map = "";
+      
+      # Core field extraction (optimized patterns)
+      /^[ \t]*artifact:[ \t]*/ { 
+        artifact = substr($0, index($0, ":") + 1)
+        gsub(/^[ \t]+|[ \t]+$/, "", artifact)
       }
-      /^[ 	]*artifact:[ 	]*/ { 
-        gsub(/^[ 	]*artifact:[ 	]*/, ""); 
-        artifact = $0 
+      /^[ \t]*namespace:[ \t]*/ { 
+        namespace = substr($0, index($0, ":") + 1)
+        gsub(/^[ \t]+|[ \t]+$/, "", namespace)
       }
-      /^[ 	]*namespace:[ 	]*/ { 
-        gsub(/^[ 	]*namespace:[ 	]*/, ""); 
-        namespace = $0 
-      }
-      /^[ \t]*lbRoutings:[ \t]*$/ { 
-        in_lbRoutings = 1; 
-        next 
-      }
-      in_lbRoutings && /^[ \t]{6}[a-zA-Z0-9-]+:[ \t]*$/ { 
-        stage = $1;
-        gsub(/^[ \t]*/, "", stage); 
-        gsub(/:/, "", stage); 
-        # Only add from lbRoutings if stages section hasnt been processed yet
-        if (stages == "" && !in_stages) {
-          stages = stage
-        }
-      }
-      /^[ \t]*stages:[ \t]*$/ { 
-        if (in_lbRoutings) {
-          in_lbRoutings = 0 
-        }
-        in_stages = 1;
-        in_target = 0;
-        # Reset stages to extract from stages section instead (prioritize stages over lbRoutings)
-        stages = "";
-      }
-      # Extract stage names from stages section
+      
+      # Stages section processing
+      /^[ \t]*stages:[ \t]*$/ { in_stages = 1; in_target = 0; stages = "" }
+      
+      # Stage name extraction (when in stages section)
       in_stages && /^[ \t]*-[ \t]*name:[ \t]*/ {
-        stage_name = $0;
-        gsub(/^[ \t]*-[ \t]*name:[ \t]*/, "", stage_name);
-        current_stage = stage_name;
-        in_target = 0;
-        if (stages == "") {
-          stages = stage_name
-        } else {
-          stages = stages "," stage_name
-        }
+        current_stage = substr($0, index($0, "name:") + 5)
+        gsub(/^[ \t]+|[ \t]+$/, "", current_stage)
+        in_target = 0
+        stages = (stages == "") ? current_stage : stages "," current_stage
       }
-      # Detect target section
-      in_stages && /^[ \t]*target:[ \t]*$/ {
-        in_target = 1;
-      }
-      # Extract cluster_id from target section under current stage - handle various formats
+      
+      # Target section detection
+      in_stages && /^[ \t]*target:[ \t]*$/ { in_target = 1 }
+      
+      # Cluster ID extraction (optimized for performance)
       in_stages && in_target && /^[ \t]*-[ \t]*cluster_id:[ \t]*/ {
-        cluster_line = $0;
-        gsub(/^[ \t]*-[ \t]*cluster_id:[ \t]*/, "", cluster_line);
+        cluster_line = substr($0, index($0, "cluster_id:") + 11)
+        gsub(/^[ \t\[]+|[ \t\]]+$/, "", cluster_line)  # Remove brackets and whitespace
+        gsub(/"[ \t]*,[ \t]*"/, ",", cluster_line)     # Clean quoted comma-separated values
+        gsub(/^"|"$/, "", cluster_line)                # Remove surrounding quotes
         
-        # Handle different formats: [cluster1,cluster2] or cluster1,cluster2 or "cluster1,cluster2" or [ "cluster1", "cluster2" ]
-        gsub(/^\[/, "", cluster_line);  # Remove opening bracket
-        gsub(/\].*$/, "", cluster_line);  # Remove closing bracket and anything after
-        gsub(/^[ \t]*/, "", cluster_line);  # Remove leading whitespace
-        gsub(/[ \t]*$/, "", cluster_line);  # Remove trailing whitespace
-        
-        # Handle quoted values within the brackets: "value1", "value2" -> value1,value2
-        gsub(/"[ \t]*,[ \t]*"/, ",", cluster_line);  # Replace ", " with ","
-        gsub(/^"/, "", cluster_line);   # Remove opening quote
-        gsub(/"$/, "", cluster_line);   # Remove closing quote
-        
-        # Store cluster for current stage
-        if (cluster_line != "") {
-          # Store stage:cluster mapping
-          if (current_stage != "" && cluster_line != "") {
-            if (stage_cluster_map == "") {
-              stage_cluster_map = current_stage ":" cluster_line
-            } else {
-              stage_cluster_map = stage_cluster_map ";" current_stage ":" cluster_line
-            }
-          }
-          # Set default cluster if not set (use first cluster found)
-          if (cluster == "") cluster = cluster_line
+        if (cluster_line != "" && current_stage != "") {
+          stage_cluster_map = (stage_cluster_map == "") ? current_stage ":" cluster_line : stage_cluster_map ";" current_stage ":" cluster_line
+          if (cluster == "") cluster = cluster_line  # Set default cluster
         }
       }
-      # Reset target flag when we encounter a new stage or top-level key
-      /^[ \t]*-[ \t]*name:[ \t]*/ {
-        in_target = 0;
-      }
-      /^[ \t]*[a-zA-Z][a-zA-Z0-9]*:[ \t]*/ && !/^[ \t]{4,}/ { 
-        if (in_lbRoutings && $0 !~ /^[ \t]*lbRoutings:/) {
-          in_lbRoutings = 0 
-        }
-        if ($0 !~ /^[ \t]*stages:/ && $0 !~ /^[ \t]*target:/) {
-          in_target = 0;
-        }
-      }
-      # Process end of each file
-      ENDFILE { 
-        # If temp file name contains "show_mode", display in comma-separated format
-        if (index(temp_file, "show_mode") > 0) {
-          if (namespace != "" && artifact != "" && cluster != "") {
-            print namespace "," artifact "," cluster
-          }
-        } else {
-          # Output entries for each stage using stage_cluster_map
-          if (namespace != "" && artifact != "" && stage_cluster_map != "") {
-            split(stage_cluster_map, stages_arr, ";")
-            for (i in stages_arr) {
-              split(stages_arr[i], stage_cluster, ":")
-              if (stage_cluster[1] != "" && stage_cluster[2] != "") {
-                # Apply environment filter if specified
-                if (env_filter == "" || index(stage_cluster[1], env_filter) > 0) {
-                  print namespace "\t" artifact "\t" stage_cluster[2] "\t" stage_cluster[1]
+      
+      # Reset flags on new sections (optimized)
+      /^[ \t]*-[ \t]*name:[ \t]*/ { in_target = 0 }
+      /^[ \t]*[a-zA-Z][a-zA-Z0-9]*:[ \t]*/ && !/^[ \t]{4,}/ && $0 !~ /^[ \t]*(stages|target):/ { in_target = 0 }
+      
+      # Output processing at end of file
+      END {
+        if (namespace != "" && artifact != "") {
+          if (is_show_mode == "true") {
+            # Show mode: simple comma-separated output
+            if (cluster != "") print namespace "," artifact "," cluster
+          } else {
+            # Normal mode: detailed stage-cluster mapping
+            if (stage_cluster_map != "") {
+              n = split(stage_cluster_map, stages_arr, ";")
+              for (i = 1; i <= n; i++) {
+                if (split(stages_arr[i], stage_cluster, ":") == 2) {
+                  stage = stage_cluster[1]
+                  cluster_val = stage_cluster[2]
+                  if (stage != "" && cluster_val != "") {
+                    # Apply environment filter if specified
+                    if (env_filter == "" || index(stage, env_filter) > 0) {
+                      print namespace "\t" artifact "\t" cluster_val "\t" stage
+                    }
+                  }
                 }
               }
             }
           }
         }
       }
-    ' "${yaml_files[@]}" >> "$temp_file" 2>/dev/null
-  fi
-  
-  # Stop loading animation silently
-  if [[ "$LOADING_ACTIVE" == true ]]; then
-    LOADING_ACTIVE=false
-    set +m
-    if [[ -n "$LOADING_PID" ]]; then
-      kill -TERM "$LOADING_PID" 2>/dev/null
-      wait "$LOADING_PID" 2>/dev/null
-    fi
-    set -m
-    # Clear the loading line without showing completion
-    printf "\r\033[K"
-    LOADING_PID=""
-  fi
+    ' "$yaml_file" >> "$temp_file"
+  done
 }
 
 # Function to get version information from kitt files
