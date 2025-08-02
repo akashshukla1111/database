@@ -240,6 +240,8 @@ show_search_help() {
     echo ""
 }
 
+
+
 # Alias for help
 alias help=show_functions
 

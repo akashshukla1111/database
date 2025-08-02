@@ -2,55 +2,8 @@
 
 source .helper.sh
 
-# Function to show available functions
-show_functions() {
-    echo ""
-    echo -e "${STD_YEL}namespace(ns)${RST}    - Extract namespace, artifact, and stages from kitt-config files"
-    echo -e "${STD_YEL}version(v)${RST}       - Get version information for specific applications"
-    echo -e "${STD_YEL}search${RST}           - Search and extract information from kitt files"    
-    echo ""
-    echo -e "${STD_GRN}For detailed help on specific commands:${RST}"
-    echo -e "${STD_CYN}  ns -h${RST}         # Namespace command help"
-    echo -e "${STD_CYN}  v -h${RST}          # Version command help"
-    echo -e "${STD_CYN}  search -h${RST}     # Search command help"
-    echo ""
-}
-
-# Individual help functions
-show_namespace_help() {
-    echo ""
-    echo -e "${STD_YEL}Description:${RST}"
-    echo -e "  Extract namespace, artifact, and stages information from kitt-config files"
-    echo ""
-    echo -e "${STD_YEL}Usage:${RST}"
-    echo -e "  ${STD_CYN}ns [market_type]${RST}"
-    echo ""
-    echo -e "${STD_YEL}Examples:${RST}"
-    echo -e "  ${STD_CYN}ns fc${RST}                    # Show fc environment namespaces"
-    echo -e "  ${STD_CYN}ns fc,default${RST}            # Show fc and default environments"
-    echo ""
-    echo -e "${STD_YEL}Output:${RST}"
-    echo -e "  Displays a table with Namespace, Artifact, and Stages columns"
-    echo ""
-}
-
-show_version_help() {
-    echo ""
-    echo -e "${STD_YEL}Description:${RST}"
-    echo -e "  Get version information for specific applications using sledge commands"
-    echo ""
-    echo -e "${STD_YEL}Usage:${RST}"
-    echo -e "  ${STD_CYN}v <app> <stage> [environment_type]${RST}"
-    echo ""
-    echo -e "${STD_YEL}Parameters:${RST}"
-    echo -e "  app                 Application name (fes, aos/os, inv, loading/lod, slotting/slot, gdm, location/loc)"
-    echo -e "  stage               Environment stage (qa, dev, prod, stg, etc.)"
-    echo -e "  environment_type    Optional: fc, amb (default: none)"
-    echo ""  
-    echo -e "${STD_YEL}Examples:${RST}"
-    echo -e "  ${STD_CYN}v fes qa fc${RST}              # Get FES version in QA FC environment"
-    echo ""
-}
+# Alias for file search script
+alias fs='./.fileSearch.sh'
 
 show_search_help() {
     echo ""
@@ -58,8 +11,8 @@ show_search_help() {
     echo -e "  Extract and display information from kitt files with optional filtering"
     echo ""
     echo -e "${STD_YEL}Usage:${RST}"
-    echo -e "  ${STD_CYN}search <file_paths> [environment_filter|search_keys] [-s|-kv|-y|-sy]${RST}"
-    echo -e "  ${STD_CYN}<command> | search [environment_filter|search_keys] [-s|-kv|-y|-sy]${RST}"
+    echo -e "  ${STD_CYN}search <file_paths> [environment_filter|search_keys] [-s|-kv|-y|-sy|-details|-show]${RST}"
+    echo -e "  ${STD_CYN}<command> | search [environment_filter|search_keys] [-s|-kv|-y|-sy|-details|-show]${RST}"
     echo ""
     echo -e "${STD_YEL}Parameters:${RST}"
     echo -e "  file_paths           File paths or command substitution result"
@@ -68,6 +21,8 @@ show_search_help() {
     echo -e "  -s, --sledge         Run sledge commands for version information"
     echo -e "  -kv, --key-value     Explicitly enable key-value search mode"
     echo -e "  -y, -sy, --yes       Auto-execute sledge commands without prompt"
+    echo -e "  -details, --details  Extract detailed information (version, dashboard, logging URLs)"
+    echo -e "  -show, --show        Display extracted information in tabular format"
     echo ""
     echo -e "${STD_YEL}Modes:${RST}"
     echo -e "  ${STD_GRN}String Search Mode (default):${RST}"
@@ -76,6 +31,10 @@ show_search_help() {
     echo -e "    Search for key-value pairs in configuration files"
     echo -e "  ${STD_GRN}Sledge Command Mode (-s flag):${RST}"
     echo -e "    Extract version information using sledge commands"
+    echo -e "  ${STD_GRN}Details Mode (-details flag):${RST}"
+    echo -e "    Extract detailed information including version, dashboard and logging URLs"
+    echo -e "  ${STD_GRN}Show Mode (-show flag):${RST}"
+    echo -e "    Display extracted namespace, artifact, environment, and cluster_id in tabular format"
     echo -e "  ${STD_GRN}Auto-Execute Mode (-y/-sy flags):${RST}"
     echo -e "    Automatically execute sledge commands without user confirmation"
     echo ""
@@ -93,10 +52,200 @@ show_search_help() {
     echo -e "  ${STD_GRN}Sledge Command Mode:${RST}"
     echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -s${RST}            # Run sledge commands for stg"
     echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -s${RST}                   # No filter, show all"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr fes/default-fc pre-main)\" stg -y${RST}              # Auto-execute for stg"
-    echo -e "  ${STD_CYN}fs -fr fes/default-fc pre-main | search stg -s${RST}                     # Use with pipe"
+    echo -e "  ${STD_CYN}search \"\$(fs -fr nte/default-fc pre-main)\" stg -y${RST}              # Auto-execute for stg"
+    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search stg -s${RST}                     # Use with pipe"
     echo -e "  ${STD_CYN}search \"\$(fs -fr nte/default-fc pre-main)\" -sy${RST}                  # Auto-execute all"
     echo ""
+    echo -e "  ${STD_GRN}Details Mode:${RST}"
+    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -details${RST}      # Get detailed info for stg"
+    echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -details${RST}             # Get details for all"
+    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search -details${RST}                   # Details with pipe"
+    echo ""
+    echo -e "  ${STD_GRN}Show Mode:${RST}"
+    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -show${RST}         # Show table for stg"
+    echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -show${RST}                # Show table for all"
+    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search -show${RST}                      # Table with pipe"
+    echo ""
+}
+
+# Helper function to extract YAML information from files
+extract_yaml_info() {
+  local file_list="$1"
+  local env_filter="$2"
+  local temp_file="$3"
+  
+  # Start loading animation for file processing
+  start_loading "Processing YAML files..."
+  
+  # Collect all valid YAML files first
+  local yaml_files=()
+  while IFS= read -r file_path; do
+    # Skip empty lines or lines that don't look like file paths
+    [[ -z "$file_path" ]] && continue
+    [[ "$file_path" == *"Found"* ]] && continue
+    [[ "$file_path" == *"Directory:"* ]] && continue
+    [[ "$file_path" == *"Searching"* ]] && continue
+    [[ "$file_path" == *"Completed"* ]] && continue
+    
+    # Only add valid YAML files
+    if [[ "$file_path" == *".yml" ]] && [[ -f "$file_path" ]]; then
+      yaml_files+=("$file_path")
+    fi
+  done <<< "$file_list"
+  
+  # Process all files in a single AWK call for much better performance
+  if [[ ${#yaml_files[@]} -gt 0 ]]; then
+    awk -v env_filter="$env_filter" -v temp_file="$temp_file" '
+      BEGIN { 
+        in_lbRoutings = 0; 
+        in_stages = 0;
+        in_target = 0;
+        current_stage = "";
+        stages = ""; 
+        artifact = ""; 
+        namespace = ""; 
+        cluster = "";
+        stage_cluster_map = "";
+      }
+      # Reset variables when starting a new file
+      FNR == 1 {
+        in_lbRoutings = 0; 
+        in_stages = 0;
+        in_target = 0;
+        current_stage = "";
+        stages = ""; 
+        artifact = ""; 
+        namespace = ""; 
+        cluster = "";
+        stage_cluster_map = "";
+      }
+      /^[ 	]*artifact:[ 	]*/ { 
+        gsub(/^[ 	]*artifact:[ 	]*/, ""); 
+        artifact = $0 
+      }
+      /^[ 	]*namespace:[ 	]*/ { 
+        gsub(/^[ 	]*namespace:[ 	]*/, ""); 
+        namespace = $0 
+      }
+      /^[ \t]*lbRoutings:[ \t]*$/ { 
+        in_lbRoutings = 1; 
+        next 
+      }
+      in_lbRoutings && /^[ \t]{6}[a-zA-Z0-9-]+:[ \t]*$/ { 
+        stage = $1;
+        gsub(/^[ \t]*/, "", stage); 
+        gsub(/:/, "", stage); 
+        # Only add from lbRoutings if stages section hasnt been processed yet
+        if (stages == "" && !in_stages) {
+          stages = stage
+        }
+      }
+      /^[ \t]*stages:[ \t]*$/ { 
+        if (in_lbRoutings) {
+          in_lbRoutings = 0 
+        }
+        in_stages = 1;
+        in_target = 0;
+        # Reset stages to extract from stages section instead (prioritize stages over lbRoutings)
+        stages = "";
+      }
+      # Extract stage names from stages section
+      in_stages && /^[ \t]*-[ \t]*name:[ \t]*/ {
+        stage_name = $0;
+        gsub(/^[ \t]*-[ \t]*name:[ \t]*/, "", stage_name);
+        current_stage = stage_name;
+        in_target = 0;
+        if (stages == "") {
+          stages = stage_name
+        } else {
+          stages = stages "," stage_name
+        }
+      }
+      # Detect target section
+      in_stages && /^[ \t]*target:[ \t]*$/ {
+        in_target = 1;
+      }
+      # Extract cluster_id from target section under current stage - handle various formats
+      in_stages && in_target && /^[ \t]*-[ \t]*cluster_id:[ \t]*/ {
+        cluster_line = $0;
+        gsub(/^[ \t]*-[ \t]*cluster_id:[ \t]*/, "", cluster_line);
+        
+        # Handle different formats: [cluster1,cluster2] or cluster1,cluster2 or "cluster1,cluster2" or [ "cluster1", "cluster2" ]
+        gsub(/^\[/, "", cluster_line);  # Remove opening bracket
+        gsub(/\].*$/, "", cluster_line);  # Remove closing bracket and anything after
+        gsub(/^[ \t]*/, "", cluster_line);  # Remove leading whitespace
+        gsub(/[ \t]*$/, "", cluster_line);  # Remove trailing whitespace
+        
+        # Handle quoted values within the brackets: "value1", "value2" -> value1,value2
+        gsub(/"[ \t]*,[ \t]*"/, ",", cluster_line);  # Replace ", " with ","
+        gsub(/^"/, "", cluster_line);   # Remove opening quote
+        gsub(/"$/, "", cluster_line);   # Remove closing quote
+        
+        # Store cluster for current stage
+        if (cluster_line != "") {
+          # Store stage:cluster mapping
+          if (current_stage != "" && cluster_line != "") {
+            if (stage_cluster_map == "") {
+              stage_cluster_map = current_stage ":" cluster_line
+            } else {
+              stage_cluster_map = stage_cluster_map ";" current_stage ":" cluster_line
+            }
+          }
+          # Set default cluster if not set (use first cluster found)
+          if (cluster == "") cluster = cluster_line
+        }
+      }
+      # Reset target flag when we encounter a new stage or top-level key
+      /^[ \t]*-[ \t]*name:[ \t]*/ {
+        in_target = 0;
+      }
+      /^[ \t]*[a-zA-Z][a-zA-Z0-9]*:[ \t]*/ && !/^[ \t]{4,}/ { 
+        if (in_lbRoutings && $0 !~ /^[ \t]*lbRoutings:/) {
+          in_lbRoutings = 0 
+        }
+        if ($0 !~ /^[ \t]*stages:/ && $0 !~ /^[ \t]*target:/) {
+          in_target = 0;
+        }
+      }
+      # Process end of each file
+      ENDFILE { 
+        # If temp file name contains "show_mode", display in comma-separated format
+        if (index(temp_file, "show_mode") > 0) {
+          if (namespace != "" && artifact != "" && cluster != "") {
+            print namespace "," artifact "," cluster
+          }
+        } else {
+          # Output entries for each stage using stage_cluster_map
+          if (namespace != "" && artifact != "" && stage_cluster_map != "") {
+            split(stage_cluster_map, stages_arr, ";")
+            for (i in stages_arr) {
+              split(stages_arr[i], stage_cluster, ":")
+              if (stage_cluster[1] != "" && stage_cluster[2] != "") {
+                # Apply environment filter if specified
+                if (env_filter == "" || index(stage_cluster[1], env_filter) > 0) {
+                  print namespace "\t" artifact "\t" stage_cluster[2] "\t" stage_cluster[1]
+                }
+              }
+            }
+          }
+        }
+      }
+    ' "${yaml_files[@]}" >> "$temp_file" 2>/dev/null
+  fi
+  
+  # Stop loading animation silently
+  if [[ "$LOADING_ACTIVE" == true ]]; then
+    LOADING_ACTIVE=false
+    set +m
+    if [[ -n "$LOADING_PID" ]]; then
+      kill -TERM "$LOADING_PID" 2>/dev/null
+      wait "$LOADING_PID" 2>/dev/null
+    fi
+    set -m
+    # Clear the loading line without showing completion
+    printf "\r\033[K"
+    LOADING_PID=""
+  fi
 }
 
 # Function to get version information from kitt files
@@ -113,6 +262,8 @@ show_search_help() {
   local run_sledge=false
   local auto_execute=false
   local key_value_mode=false
+  local details_mode=false
+  local show_mode=false
   
   # Check for flags anywhere in arguments
   local args=("$@")
@@ -132,6 +283,13 @@ show_search_help() {
       -sy|--sledge-yes)
         run_sledge=true
         auto_execute=true
+        ;;
+      -details|--details)
+        details_mode=true
+        run_sledge=true
+        ;;
+      -show|--show)
+        show_mode=true
         ;;
       *)
         new_args+=("$arg")
@@ -159,7 +317,7 @@ show_search_help() {
       fi
     elif [[ $# -eq 2 ]]; then
       file_list="$piped_data"
-      if [[ "$run_sledge" == true ]]; then
+      if [[ "$run_sledge" == true || "$show_mode" == true ]]; then
         env_filter="$1"
       elif [[ "$key_value_mode" == true ]]; then
         search_keys="$1"
@@ -182,8 +340,8 @@ show_search_help() {
       file_list="$1"
     else
       file_list="$1"
-      if [[ "$run_sledge" == true ]]; then
-        # For sledge mode, second argument (if exists) is environment filter
+      if [[ "$run_sledge" == true || "$show_mode" == true ]]; then
+        # For sledge/show mode, second argument (if exists) is environment filter
         if [[ $# -eq 2 ]]; then
           env_filter="$2"
         fi
@@ -207,318 +365,73 @@ show_search_help() {
   
   # If no input provided, show usage
   if [[ -z "$file_list" ]]; then
-    echo -e "${STD_RED}Usage: search <file_paths> [environment_filter|search_keys] [-s|-kv|-y|-sy]"
+    echo -e "${STD_RED}Usage: search <file_paths> [environment_filter|search_keys] [-s|-kv|-y|-sy|-show]"
     echo -e "${STD_GRN}Example: search \"\$(fs -fr aos/default-fc pre-main)\" qa -s     # Run sledge commands"
     echo -e "${STD_GRN}Example: search \"\$(fs -fr aos/default-fc pre-main)\" qa -y     # Auto-execute for qa"
     echo -e "${STD_GRN}Example: search \"\$(fs -fr aos/default-fc pre-main)\" artifact -kv  # Search for 'artifact' key"
     echo -e "${STD_GRN}Example: search \"\$(fs -fr aos/default-fc pre-main)\" artifact  # Search for 'artifact' string"
+    echo -e "${STD_GRN}Example: search \"\$(fs -fr aos/default-fc pre-main)\" qa -show  # Show table format"
     return 1
   fi
   
   # Choose the appropriate processing mode
-  if [[ "$run_sledge" == true ]]; then
-    # SLEDGE MODE: Original vk functionality
-    # Create temporary file for processing
+  if [[ "$show_mode" == true ]]; then
+    # SHOW MODE: Display extracted information in tabular format
+    # Create temporary file for processing (with special name to trigger grouping)
     local temp_file=$(mktemp)
     
-    # Start loading animation for file processing
-    start_loading "Processing YAML files..."
+    # Use helper function to extract YAML information (grouped clusters)
+    extract_yaml_info "$file_list" "$env_filter" "$temp_file"
     
-    # Process each file path for sledge commands
-    while IFS= read -r file_path; do
-      # Skip empty lines or lines that don't look like file paths
-      [[ -z "$file_path" ]] && continue
-      [[ "$file_path" == *"Found"* ]] && continue
-      [[ "$file_path" == *"Directory:"* ]] && continue
-      [[ "$file_path" == *"Searching"* ]] && continue
-      [[ "$file_path" == *"Completed"* ]] && continue
-      
-      # Extract information from the file path
-      if [[ "$file_path" == *".yml" ]] && [[ -f "$file_path" ]]; then
-        # Parse the YAML file to extract namespace, artifact, and lbRoutings
-        local yaml_info=$(awk '
-          BEGIN { 
-            in_lbRoutings = 0; 
-            stages = ""; 
-            artifact = ""; 
-            namespace = "" 
-          }
-          /^[[:space:]]*artifact:[[:space:]]*/ { 
-            gsub(/^[[:space:]]*artifact:[[:space:]]*/, ""); 
-            artifact = $0 
-          }
-          /^[[:space:]]*namespace:[[:space:]]*/ { 
-            gsub(/^[[:space:]]*namespace:[[:space:]]*/, ""); 
-            namespace = $0 
-          }
-          /^[[:space:]]*lbRoutings:[[:space:]]*$/ { 
-            in_lbRoutings = 1; 
-            next 
-          }
-          in_lbRoutings && /^[[:space:]]{6}[a-zA-Z0-9-]+:[[:space:]]*$/ { 
-            stage = $1;
-            gsub(/^[[:space:]]*/, "", stage); 
-            gsub(/:/, "", stage); 
-            if (stages == "") {
-              stages = stage
-            } else {
-              stages = stages "," stage
-            }
-          }
-          /^[[:space:]]*[a-zA-Z][a-zA-Z0-9]*:[[:space:]]*/ && !/^[[:space:]]{4,}/ { 
-            if (in_lbRoutings && $0 !~ /^[[:space:]]*lbRoutings:/) {
-              in_lbRoutings = 0 
-            }
-          }
-          END { 
-            if (artifact && namespace && stages) {
-              print namespace "\t" artifact "\t" stages
-            }
-          }
-        ' "$file_path" 2>/dev/null)
-        
-        if [[ -n "$yaml_info" ]]; then
-          # Parse the extracted information
-          IFS=$'\t' read -r namespace artifact environments <<< "$yaml_info"
-          
-          # Split environments and create entries for each
-          IFS=',' read -r -A env_array <<< "$environments"
-          for env in "${env_array[@]}"; do
-            env=$(echo "$env" | xargs)  # Trim whitespace
-            
-            # If environment filter is specified, only include matching environments
-            if [[ -n "$env_filter" ]]; then
-              # Split the filter into an array
-              IFS=',' read -r -A filter_array <<< "$env_filter"
-              local env_matched=false
-              
-              for filter in "${filter_array[@]}"; do
-                filter=$(echo "$filter" | xargs)  # Trim whitespace
-                if [[ "$env" == *"$filter"* ]]; then
-                  env_matched=true
-                  break
-                fi
-              done
-              
-              # Only add if environment matches the filter
-              if [[ "$env_matched" == true ]]; then
-                echo "$namespace	$artifact	$env" >> "$temp_file"
-              fi
-            else
-              # No filter, include all environments
-              [[ -n "$env" ]] && echo "$namespace	$artifact	$env" >> "$temp_file"
-            fi
-          done
-        fi
-      fi
-    done <<< "$file_list"
-    
-    # Stop loading animation silently
-    if [[ "$LOADING_ACTIVE" == true ]]; then
-      LOADING_ACTIVE=false
-      set +m
-      if [[ -n "$LOADING_PID" ]]; then
-        kill -TERM "$LOADING_PID" 2>/dev/null
-        wait "$LOADING_PID" 2>/dev/null
-      fi
-      set -m
-      # Clear the loading line without showing completion
-      printf "\r\033[K"
-      LOADING_PID=""
-    fi
-    
-    # Display results in a clean format
+    # Display results in tabular format
     if [[ -s "$temp_file" ]]; then
       if [[ -n "$env_filter" ]]; then
         echo -e "${STD_PUR}Filtered by: ${STD_YEL}${env_filter}${RST}"
       fi      
       echo ""
       
-      # First, show all sledge commands without executing them
-      local commands=()
-      local namespaces=()
-      local artifacts=()
-      local environments=()
+      # Display table header
+      printf "${STD_YEL}%-30s %-30s %-15s %-40s${RST}\n" "NAMESPACE" "ARTIFACT" "ENVIRONMENT" "CLUSTER_ID"
+      printf "${STD_YEL}%-30s %-30s %-15s %-40s${RST}\n" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 15 | tr ' ' '-')" "$(printf '%*s' 40 | tr ' ' '-')"
       
-      while IFS=$'\t' read -r namespace artifact environment; do
+      # Display sorted and unique entries
+      while IFS=$'\t' read -r namespace artifact cluster environment; do
         [[ -z "$namespace" ]] && continue
-        
-        # Create the sledge command with colors
-        local colored_command="${BLU}sledge${RST} wcnp describe app ${SKY}${artifact}${RST}-${STD_CYN}${environment}${RST} ${CYN}-n ${BRN}${namespace}${RST}"
-        local plain_command="sledge wcnp describe app ${artifact}-${environment} -n ${namespace}"
-        
-        # Store command details for later use
-        commands+=("$plain_command")
-        namespaces+=("$namespace")
-        artifacts+=("$artifact")
-        environments+=("$environment")
-        
-        # Display the command with number
-        echo -e "${STD_WHT}[${#commands[@]}]${RST} ${colored_command}"
-        
+        printf "${BRN}%-30s${RST} ${SKY}%-30s${RST} ${STD_CYN}%-15s${RST} ${PUR}%-40s${RST}\n" "$namespace" "$artifact" "$environment" "$cluster"
       done < <(sort -u "$temp_file")
-      
-      # Helper function to execute a single sledge command
-      execute_single_sledge_command() {
-        local i="$1"
-        local namespace="${namespaces[$i]}"
-        local artifact="${artifacts[$i]}"
-        local environment="${environments[$i]}"
-        local plain_command="${commands[$i]}"
-        
-        # Start individual timing
-        local cmd_start_time=$(date +%s)
-        
-        # Create unique temp files for this command
-        local temp_output="/tmp/sledge_output_$$_${i}"
-        local temp_exit="/tmp/sledge_exit_$$_${i}"
-        
-        # Start background process using a temporary script file
-        local temp_script="/tmp/sledge_script_$$_${i}"
-        cat > "$temp_script" << EOF
-#!/bin/zsh
-source .helper.sh
-appversion() {
-    cleaned_output=\$(expect -c "
-    spawn \$*
-    expect \">\"
-    send \"\r\"
-    expect eof
-    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g' | tr -cd '\11\12\15\40-\176')
-    echo "\$cleaned_output" | awk '/Labels/{flag=1; next} /Status/{flag=0} flag' | grep -E 'app.kubernetes.io/version[ ]*:' | head -1 | awk -F: '{gsub(/^[ \t]+|[ \t]+\$/, "", \$2); print \$2}'
-}
-result=\$(appversion $plain_command 2>/dev/null)
-exit_status=\$?
-echo "\$result" > "$temp_output"
-echo \$exit_status > "$temp_exit"
-rm -f "$temp_script"
-EOF
-        chmod +x "$temp_script"
-        "$temp_script" >/dev/null 2>&1 &
-        local cmd_pid=$!
-        
-        # Simple timer animation - update same line
-        local elapsed=0
-        while kill -0 $cmd_pid 2>/dev/null; do
-          printf "\r${STD_CYN}[%ss]${RST} ${SKY}%-25s${RST} ${STD_CYN}%-15s${RST} ${STD_YEL}Running ${RST}" \
-            "$elapsed" "$artifact" "$environment"
-          sleep 1
-          elapsed=$((elapsed + 1))
-        done
-        
-        # Wait for the background process to complete
-        wait $cmd_pid >/dev/null 2>&1
-        
-        # Get the result
-        local version_info=""
-        local exit_code=1
-        if [[ -f "$temp_output" ]]; then
-          version_info=$(cat "$temp_output")
-        fi
-        if [[ -f "$temp_exit" ]]; then
-          exit_code=$(cat "$temp_exit")
-        fi
-        
-        # Calculate final execution time
-        local cmd_end_time=$(date +%s)
-        local cmd_elapsed=$((cmd_end_time - cmd_start_time))
-        
-        # Handle result
-        if [[ $exit_code -eq 0 && -n "$version_info" ]]; then
-          # Clean up version info if needed
-          version_info=$(echo "$version_info" | sed 's/^v//' | xargs)
-          [[ -z "$version_info" ]] && version_info="Not found"
-        else
-          version_info="Command failed"
-        fi
-        
-        # Clear the loading line and display final result
-        printf "\r${STD_CYN}[%ss]${RST} ${SKY}%-25s${RST} ${STD_CYN}%-15s${RST} ${STD_GRN}%s${RST}\n" \
-          "$cmd_elapsed" "$artifact" "$environment" "$version_info"
-        
-        # Clean up temp files
-        rm -f "$temp_output" "$temp_exit"
-      }
-      
-      # Helper function to execute all commands
-      execute_all_commands() {
-        # Clear the screen area where commands were displayed
-        local num_commands=${#commands[@]}
-        for ((j=0; j<num_commands+2; j++)); do
-          echo -ne "\033[1A\033[K"  # Move up one line and clear it
-        done
-        
-        # First, show all applications to be queried
-        echo -e "${STD_GRN}Loading version information for ${#commands[@]} application(s)...${RST}"
-        for i in {1..${#commands[@]}}; do
-          local namespace="${namespaces[$i]}"
-          local artifact="${artifacts[$i]}"
-          local environment="${environments[$i]}"
-          echo -e "${STD_CYN}[${i}]${RST} ${BLU}sledge ${RST}wcnp describe app ${SKY}${artifact}${RST}-${STD_CYN}${environment}${RST} ${CYN}-n ${BRN}${namespace}${RST}"
-        done
-        echo ""
-        
-        # Disable job control notifications temporarily
-        set +m
-        # Execute all commands
-        for i in {1..${#commands[@]}}; do
-          execute_single_sledge_command "$i"
-        done
-        # Re-enable job control
-        set -m
-      }
-      
-      # Helper function to execute specific command
-      execute_specific_command() {
-        local cmd_num="$1"
-        
-        # Clear the screen area where commands were displayed
-        local num_commands=${#commands[@]}
-        for ((j=0; j<num_commands+2; j++)); do
-          echo -ne "\033[1A\033[K"  # Move up one line and clear it
-        done
-        
-        # Show the specific command being executed
-        local namespace="${namespaces[$cmd_num]}"
-        local artifact="${artifacts[$cmd_num]}"
-        local environment="${environments[$cmd_num]}"
-        echo -e "${STD_GRN}Loading version information for command ${cmd_num}...${RST}"
-        echo -e "${STD_CYN}[${cmd_num}]${RST} ${BLU}sledge ${RST}wcnp describe app ${BRN}${artifact}${RST}-${RED}${environment}${RST} ${STD_CYN}-n ${SKY}${namespace}${RST}"
-        echo ""
-        
-        # Disable job control notifications temporarily
-        set +m
-        # Execute the specific command
-        execute_single_sledge_command "$cmd_num"
-        # Re-enable job control
-        set -m
-      }
-      
+    else
+      echo -e "${STD_RED}No matching YAML files found or unable to extract information.${RST}"
+    fi
+    
+    # Clean up temp file
+    rm -f "$temp_file"
+    
+  elif [[ "$run_sledge" == true ]]; then
+    # SLEDGE MODE: Original vk functionality
+    # Create temporary file for processing
+    local temp_file=$(mktemp)
+    
+    # Use helper function to extract YAML information
+    extract_yaml_info "$file_list" "$env_filter" "$temp_file"
+    
+    # Display results in a table format
+    if [[ -s "$temp_file" ]]; then
+      if [[ -n "$env_filter" ]]; then
+        echo -e "${STD_PUR}Filtered by: ${STD_YEL}${env_filter}${RST}"
+      fi      
       echo ""
       
-      local load_versions=""
-      if [[ "$auto_execute" == true ]]; then
-        # Auto-execute all commands without asking
-        load_versions="y"
-        echo -e "${STD_WHT}Auto-executing all commands...${RST}"
-      else
-        # Show prompt and allow number selection
-        echo -n "${STD_WHT}Load versions? (y/yes to load all, 1-${#commands[@]} to load specific, Enter to exit): ${RST}"
-        read load_versions </dev/tty
-      fi
+      # Display table header
+      printf "${STD_YEL}%-30s %-30s %-15s %-20s${RST}\n" "NAMESPACE" "ARTIFACT" "ENVIRONMENT" "CLUSTER_ID"
+      printf "${STD_YEL}%-30s %-30s %-15s %-20s${RST}\n" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 15 | tr ' ' '-')" "$(printf '%*s' 20 | tr ' ' '-')"
       
-      if [[ "${load_versions:l}" == "y" || "${load_versions:l}" == "yes" ]]; then
-        # Execute all commands
-        execute_all_commands
-      elif [[ "$load_versions" =~ ^[0-9]+$ ]] && [[ "$load_versions" -ge 1 ]] && [[ "$load_versions" -le "${#commands[@]}" ]]; then
-        # Execute specific command by number
-        execute_specific_command "$load_versions"
-      else
-        echo -e "${STD_YEL}Exiting without loading versions.${RST}"
-      fi
-      
+      # Display sorted and unique entries
+      while IFS=$'\t' read -r namespace artifact cluster environment; do
+        [[ -z "$namespace" ]] && continue
+        printf "${BRN}%-30s${RST} ${SKY}%-30s${RST} ${STD_CYN}%-15s${RST} ${PUR}%-20s${RST}\n" "$namespace" "$artifact" "$environment" "$cluster"
+      done < <(sort -u "$temp_file")
     else
-      echo -e "${STD_RED}No matching YAML files found or unable to extract information for${RST} ${RED}Sledge.${RST}"
+      echo -e "${STD_RED}No matching YAML files found or unable to extract information.${RST}"
     fi
     
     # Clean up temp file
@@ -752,8 +665,97 @@ appversion() {
     expect eof
     " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g' | tr -cd '\11\12\15\40-\176')
 
-    # Extract and print only the version
-    echo "$cleaned_output" | awk '/Labels/{flag=1; next} /Status/{flag=0} flag' | grep -E 'app.kubernetes.io/version[ ]*:' | head -1 | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}'
+    # Check if output is JSON format (contains --json flag)
+    if echo "$*" | grep -q -- "--json"; then
+        # Parse JSON output for version
+        echo "$cleaned_output" | grep -o '"app\.kubernetes\.io/version"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"app\.kubernetes\.io\/version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1
+    else
+        # Parse text output for version (legacy)
+        echo "$cleaned_output" | awk '/Labels/{flag=1; next} /Status/{flag=0} flag' | grep -E 'app.kubernetes.io/version[ ]*:' | head -1 | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}'
+    fi
+}
+
+appdetails() {
+    # Run the command, clean output, and extract dashboard and logging URLs
+    cleaned_output=$(expect -c "
+    spawn $*
+    expect \">\"
+    send \"\r\"
+    expect eof
+    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g')
+
+    # Parse text output (original functionality)
+    version=$(echo "$cleaned_output" | grep "app.kubernetes.io/version" | head -1 | sed 's/.*app\.kubernetes\.io\/version[[:space:]]*:[[:space:]]*//' | sed 's/[[:space:]].*//' | sed 's/[^a-zA-Z0-9.-].*//')
+    dashboard_url=$(echo "$cleaned_output" | grep "➤.*Dashboard:" | head -1 | sed 's/.*➤[[:space:]]*Dashboard:[[:space:]]*//')
+    logging_output=$(echo "$cleaned_output" | grep "➤.*Logging")
+    
+    # Output results
+    if [[ -n "$version" ]]; then
+        echo -e "${STD_CYN}Version:${RST} ${BLK}$version${RST}"
+    fi
+    if [[ -n "$dashboard_url" ]]; then
+        echo -e "${STD_CYN}Dashboard:${RST} ${BLK}$dashboard_url${RST}"
+    fi
+    if [[ -n "$logging_output" ]]; then
+        local counter=1
+        while IFS= read -r line; do
+            if [[ -n "$line" ]]; then
+                # Extract the logging type and URL
+                logging_type=$(echo "$line" | sed 's/.*➤[[:space:]]*Logging\([^:]*\):.*/\1/' | sed 's/^_//')
+                logging_url=$(echo "$line" | sed 's/.*➤[[:space:]]*Logging[^:]*:[[:space:]]*//')
+                
+                if [[ -z "$logging_type" || "$logging_type" == "$line" ]]; then
+                    echo -e "${STD_CYN}Logging:${RST} ${BLK}$logging_url${RST}"
+                else
+                    echo -e "${STD_CYN}Logging_$logging_type:${RST} ${BLK}$logging_url${RST}"
+                fi
+            fi
+        done <<< "$logging_output"
+    fi
+    if [[ -z "$version" && -z "$dashboard_url" && -z "$logging_output" ]]; then
+        echo "No details found"
+    fi
+}
+
+jsonDetails() {
+    # Run the command, clean output, and extract JSON details
+    cleaned_output=$(expect -c "
+    spawn $*
+    expect \">\"
+    send \"\r\"
+    expect eof
+    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g')
+    
+    # Parse JSON output
+    version=$(echo "$cleaned_output" | grep -o '"app\.kubernetes\.io/version"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"app\.kubernetes\.io\/version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1)
+    dashboard_url=$(echo "$cleaned_output" | grep -o '"Dashboard"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"Dashboard"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1)
+    logging_urls=$(echo "$cleaned_output" | grep -o '"Logging[^"]*"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"\(Logging[^"]*\)"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1: \2/')
+    
+    # Output results
+    if [[ -n "$version" ]]; then
+        echo -e "${STD_CYN}Version:${RST} ${BLK}$version${RST}"
+    fi
+    if [[ -n "$dashboard_url" ]]; then
+        echo -e "${STD_CYN}Dashboard:${RST} ${BLK}$dashboard_url${RST}"
+    fi
+    if [[ -n "$logging_urls" ]]; then
+        while IFS= read -r line; do
+            if [[ -n "$line" ]]; then
+                if [[ "$line" == *": "* ]]; then
+                    logging_type=$(echo "$line" | cut -d':' -f1 | sed 's/^_//')
+                    logging_url=$(echo "$line" | cut -d':' -f2- | sed 's/^ *//')
+                    if [[ -z "$logging_type" ]]; then
+                        echo -e "${STD_CYN}Logging:${RST} ${BLK}$logging_url${RST}"
+                    else
+                        echo -e "${STD_CYN}Logging_$logging_type:${RST} ${BLK}$logging_url${RST}"
+                    fi
+                fi
+            fi
+        done <<< "$logging_urls"
+    fi
+    if [[ -z "$version" && -z "$dashboard_url" && -z "$logging_urls" ]]; then
+        echo "No details found"
+    fi
 }
 
 # Alias for help

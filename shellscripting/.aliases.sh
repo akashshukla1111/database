@@ -44,7 +44,7 @@ function loading() {
 
 function v() {
   log="Running command for $1 with stages $2 -->"
-  search_cmd="search $2 ${3:--s}"
+  search_cmd="search $2 ${3:--s} ${4}"
   case "$1" in
     -rcv | rcv )
         find_cmd="fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
