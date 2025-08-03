@@ -254,8 +254,8 @@ execute_command_with_loading() {
     local cmd_cluster="$6"
     local mode="$7"  # New parameter for mode (sledge or details)
     
-    # local loading_message="${STG_CYN}${cmd_num}${RST} ${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STG_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
-    local loading_message=$'\033[0;36m'"${cmd_num}"$'\033[0m Namespace: \033[0;36m'"${cmd_namespace}"$'\033[0m | App: \033[1;96m'"${cmd_artifact}"$'\033[0m-\033[0;36m'"${cmd_environment}"$'\033[0m | Cluster: \033[1;95m'"${cmd_cluster}"$'\033[0m'
+    # local loading_message="${STG_CYN}${cmd_num}${RST} ${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STG_CYN}Environment:${RST} ${cmd_environment} | ${BRI_WHT}Cluster:${RST} ${cmd_cluster}"
+    local loading_message=$'\033[0;36m'"${cmd_num}"$'\033[0m Namespace: \033[0;33m'"${cmd_namespace}"$'\033[0m | App: \033[1;96m'"${cmd_artifact}"$'\033[0m-\033[0;36m'"${cmd_environment}"$'\033[0m | Cluster: \033[1;37m'"${cmd_cluster}"$'\033[0m'
     
     # Start loading animation (will automatically detect if in terminal/pipe context)
     start_loading "$loading_message"
@@ -276,8 +276,8 @@ execute_command_with_loading() {
         stop_loading
         
         # Show final result with basic info (with colors)
-        # echo -e "${STD_CYN}${cmd_num}${RST} Namespace: ${STD_CYN}${cmd_namespace}${RST} | App: ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} | Cluster: ${PUR}${cmd_cluster}${RST}"
-        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_CYN}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${PUR}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}"
+        # echo -e "${STD_CYN}${cmd_num}${RST} Namespace: ${STD_CYN}${cmd_namespace}${RST} | App: ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} | Cluster: ${BRI_WHT}${cmd_cluster}${RST}"
+        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_YEL}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${BRI_WHT}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}"
         echo "--------------------------------------------------------------------------------------------------"
         # Show detailed information
         echo "$details"
@@ -300,7 +300,7 @@ execute_command_with_loading() {
         stop_loading
         
         # Show final result with checkmark, time and version in one line (overwrite the stop_loading output)
-        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_CYN}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${PUR}%s${RST} | Version: ${STD_GRN}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}" "${version}"
+        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_YEL}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${BRI_WHT}%s${RST} | Version: ${GRN}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}" "${version}"
     fi
 }
 
@@ -452,7 +452,7 @@ execute_command_with_loading() {
       # Display sorted and unique entries
       while IFS=$'\t' read -r namespace artifact cluster environment; do
         [[ -z "$namespace" ]] && continue
-        printf "${BRN}%-30s${RST} ${SKY}%-30s${RST} ${STD_CYN}%-15s${RST} ${PUR}%-40s${RST}\n" "$namespace" "$artifact" "$environment" "$cluster"
+        printf "${BRN}%-30s${RST} ${SKY}%-30s${RST} ${STD_CYN}%-15s${RST} ${BRI_WHT}%-40s${RST}\n" "$namespace" "$artifact" "$environment" "$cluster"
       done < <(sort -u "$temp_file")
     else
       echo -e "${STD_RED}No matching YAML files found or unable to extract information.${RST}"
@@ -507,7 +507,7 @@ execute_command_with_loading() {
       local cmd_num=1
       while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
         # Create colored version of the command
-        echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${BRN}${cmd_namespace}${RST} -c ${PUR}${cmd_cluster}${RST} --json"
+        echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${STD_YEL}${cmd_namespace}${RST} -c ${BRI_WHT}${cmd_cluster}${RST} --json"
         ((cmd_num++))
       done < "$commands_file" 3< "$details_file"
       
@@ -528,7 +528,7 @@ execute_command_with_loading() {
       else
         # Interactive mode - prompt user for selection
         while true; do
-          echo -e "${STD_YEL}Choose to execute [ ${STD_GRN}y/yes${STD_YEL} : all | ${STD_CYN}1-4${STD_YEL} : range | ${STD_CYN}1,3,4${STD_YEL} : multiple select | ${STD_RED}enter${STD_YEL} to exit ]${RST} : \c"
+          echo -e "${STD_YEL}Choose to execute [ ${GRN}y/yes${STD_YEL} : all | ${CYN}1-4${STD_YEL} : range | ${CYN}1,3,4${STD_YEL} : multiple select | ${GRN}enter${STD_YEL} to exit ]${RST} : \c"
           read -r user_selection < /dev/tty
           
           # Handle empty input (exit)
@@ -578,6 +578,32 @@ execute_command_with_loading() {
               break
             else
               echo -e "${STD_RED}Invalid range. Please enter a valid range (1-${command_count}).${RST}"
+              continue
+            fi
+          fi
+          
+          # Handle single number selection (e.g., "1")
+          if [[ "$user_selection" =~ ^[0-9]+$ ]]; then
+            selected_num=$(echo "$user_selection" | xargs)  # Trim whitespace
+            
+            # Validate single number
+            if [[ $selected_num -ge 1 && $selected_num -le $command_count ]]; then
+              echo ""
+              
+              cmd_num=1
+              while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+                if [[ $cmd_num -eq $selected_num ]]; then         
+                  # Build command without cluster ID for single digit selection
+                  sledge_cmd_no_cluster="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace}"
+                  echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${STD_YEL}${cmd_namespace}${RST}"                  
+                  eval "$sledge_cmd_no_cluster"
+                  break
+                fi
+                ((cmd_num++))
+              done < "$commands_file" 3< "$details_file"
+              break
+            else
+              echo -e "${STD_RED}Invalid selection: ${selected_num}. Please enter a number between 1 and ${command_count}.${RST}"
               continue
             fi
           fi
