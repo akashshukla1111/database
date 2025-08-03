@@ -98,7 +98,7 @@ extract_yaml_info() {
   for yaml_file in "${yaml_files[@]}"; do
     awk -v env_filter="$env_filter" -v is_show_mode="$is_show_mode" '
       BEGIN {
-        in_stages = in_target = 0
+        in_gslb = in_lbRoutings = in_stages = in_target = 0
         current_stage = stages = artifact = namespace = cluster = stage_cluster_map = ""
       }
       
@@ -112,21 +112,55 @@ extract_yaml_info() {
         gsub(/^[ \t]+|[ \t]+$/, "", namespace)
       }
       
-      # Stages section processing
-      /^[ \t]*stages:[ \t]*$/ { in_stages = 1; in_target = 0; stages = "" }
+      # GSLB lbRoutings section processing - extract env and matchStages
+      /^[ \t]*gslb:[ \t]*$/ { in_gslb = 1 }
+      in_gslb && /^[ \t]*lbRoutings:[ \t]*$/ { in_lbRoutings = 1 }
+      in_gslb && in_lbRoutings && /^[ \t]*[a-zA-Z0-9-]+:[ \t]*$/ {
+        env_name = $0
+        gsub(/^[ \t]+|[ \t]+$/, "", env_name)
+        gsub(/:.*$/, "", env_name)
+        if (env_name != "lbRoutings" && env_name != "stages" && env_name != "cnames" && env_name != "helm" && env_name != "") {
+          current_gslb_env = env_name
+          if (stages == "") {
+            stages = env_name
+          } else {
+            stages = stages "," env_name
+          }
+        }
+      }
+      
+      # Extract matchStages for current gslb environment
+      in_gslb && in_lbRoutings && current_gslb_env != "" && /^[ \t]*matchStages:[ \t]*\[/ {
+        match_stages_line = $0
+        gsub(/^[ \t]*matchStages:[ \t]*\[/, "", match_stages_line)
+        gsub(/\].*$/, "", match_stages_line)
+        gsub(/[ \t"]+/, "", match_stages_line)
+        # Store the mapping: gslb_env -> match_stages
+        if (match_stages_line != "") {
+          gslb_to_stages[current_gslb_env] = match_stages_line
+        }
+      }
+      
+      # Stages section processing - to get cluster_id for matchStages
+      /^[ \t]*stages:[ \t]*$/ { 
+        in_stages = 1
+        in_target = 0
+        in_gslb = 0
+        in_lbRoutings = 0
+        current_gslb_env = ""
+      }
       
       # Stage name extraction (when in stages section)
       in_stages && /^[ \t]*-[ \t]*name:[ \t]*/ {
         current_stage = substr($0, index($0, "name:") + 5)
         gsub(/^[ \t]+|[ \t]+$/, "", current_stage)
         in_target = 0
-        stages = (stages == "") ? current_stage : stages "," current_stage
       }
       
       # Target section detection
       in_stages && /^[ \t]*target:[ \t]*$/ { in_target = 1 }
       
-      # Cluster ID extraction (optimized for performance)
+      # Cluster ID extraction (to map stages to cluster_ids)
       in_stages && in_target && /^[ \t]*-[ \t]*cluster_id:[ \t]*/ {
         cluster_line = substr($0, index($0, "cluster_id:") + 11)
         gsub(/^[ \t\[]+|[ \t\]]+$/, "", cluster_line)  # Remove brackets and whitespace
@@ -134,14 +168,16 @@ extract_yaml_info() {
         gsub(/^"|"$/, "", cluster_line)                # Remove surrounding quotes
         
         if (cluster_line != "" && current_stage != "") {
-          stage_cluster_map = (stage_cluster_map == "") ? current_stage ":" cluster_line : stage_cluster_map ";" current_stage ":" cluster_line
-          if (cluster == "") cluster = cluster_line  # Set default cluster
+          # Store stage -> cluster mapping
+          stage_to_cluster[current_stage] = cluster_line
         }
       }
       
       # Reset flags on new sections (optimized)
-      /^[ \t]*-[ \t]*name:[ \t]*/ { in_target = 0 }
-      /^[ \t]*[a-zA-Z][a-zA-Z0-9]*:[ \t]*/ && !/^[ \t]{4,}/ && $0 !~ /^[ \t]*(stages|target):/ { in_target = 0 }
+      /^[ \t]*[a-zA-Z][a-zA-Z0-9]*:[ \t]*/ && !/^[ \t]{4,}/ && $0 !~ /^[ \t]*(gslb|lbRoutings):/ { 
+        in_gslb = 0
+        in_lbRoutings = 0
+      }
       
       # Output processing at end of file
       END {
@@ -150,18 +186,29 @@ extract_yaml_info() {
             # Show mode: simple comma-separated output
             if (cluster != "") print namespace "," artifact "," cluster
           } else {
-            # Normal mode: detailed stage-cluster mapping
-            if (stage_cluster_map != "") {
-              n = split(stage_cluster_map, stages_arr, ";")
+            # Normal mode: map gslb environments to their cluster_ids via matchStages
+            if (stages != "") {
+              n = split(stages, gslb_envs, ",")
               for (i = 1; i <= n; i++) {
-                if (split(stages_arr[i], stage_cluster, ":") == 2) {
-                  stage = stage_cluster[1]
-                  cluster_val = stage_cluster[2]
-                  if (stage != "" && cluster_val != "") {
+                gslb_env = gslb_envs[i]
+                if (gslb_env in gslb_to_stages) {
+                  match_stage = gslb_to_stages[gslb_env]
+                  if (match_stage in stage_to_cluster) {
+                    cluster_val = stage_to_cluster[match_stage]
                     # Apply environment filter if specified
-                    if (env_filter == "" || index(stage, env_filter) > 0) {
-                      print namespace "\t" artifact "\t" cluster_val "\t" stage
+                    if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                      print namespace "\t" artifact "\t" cluster_val "\t" gslb_env
                     }
+                  } else {
+                    # If no matching stage found, use default cluster
+                    if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                      print namespace "\t" artifact "\tdefault-cluster\t" gslb_env
+                    }
+                  }
+                } else {
+                  # If no matchStages found, use default cluster
+                  if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                    print namespace "\t" artifact "\tdefault-cluster\t" gslb_env
                   }
                 }
               }
@@ -332,29 +379,219 @@ extract_yaml_info() {
     rm -f "$temp_file"
     
   elif [[ "$run_sledge" == true ]]; then
-    # SLEDGE MODE: Original vk functionality
+    # SLEDGE MODE: Generate and execute sledge commands
     # Create temporary file for processing
     local temp_file=$(mktemp)
     
     # Use helper function to extract YAML information
     extract_yaml_info "$file_list" "$env_filter" "$temp_file"
     
-    # Display results in a table format
+    # Check if we have data to work with
     if [[ -s "$temp_file" ]]; then
       if [[ -n "$env_filter" ]]; then
         echo -e "${STD_PUR}Filtered by: ${STD_YEL}${env_filter}${RST}"
       fi      
       echo ""
       
-      # Display table header
-      printf "${STD_YEL}%-30s %-30s %-15s %-20s${RST}\n" "NAMESPACE" "ARTIFACT" "ENVIRONMENT" "CLUSTER_ID"
-      printf "${STD_YEL}%-30s %-30s %-15s %-20s${RST}\n" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 30 | tr ' ' '-')" "$(printf '%*s' 15 | tr ' ' '-')" "$(printf '%*s' 20 | tr ' ' '-')"
+      # Create temporary files to store commands and details
+      local commands_file=$(mktemp)
+      local details_file=$(mktemp)
+      local command_count=0
       
-      # Display sorted and unique entries
+      # Generate sledge commands
       while IFS=$'\t' read -r namespace artifact cluster environment; do
         [[ -z "$namespace" ]] && continue
-        printf "${BRN}%-30s${RST} ${SKY}%-30s${RST} ${STD_CYN}%-15s${RST} ${PUR}%-20s${RST}\n" "$namespace" "$artifact" "$environment" "$cluster"
+        
+        # Get first cluster ID for the command
+        first_cluster=$(echo "$cluster" | cut -d',' -f1)
+        
+        # Build sledge command
+        sledge_cmd="sledge wcnp describe app ${artifact}-${environment} -n ${namespace} -c ${first_cluster} --json"
+        echo "$sledge_cmd" >> "$commands_file"
+        echo "${namespace}|${artifact}|${environment}|${first_cluster}" >> "$details_file"
+        ((command_count++))
       done < <(sort -u "$temp_file")
+      
+      if [[ $command_count -eq 0 ]]; then
+        echo -e "${STD_RED}No sledge commands to generate.${RST}"
+        rm -f "$temp_file" "$commands_file" "$details_file"
+        return 1
+      fi
+      
+      # Display all sledge commands with numbers
+      echo -e "${STD_YEL}Generated Sledge Commands:${RST}"
+      echo ""
+      local cmd_num=1
+      while IFS= read -r cmd; do
+        echo -e "${STD_CYN}${cmd_num}.${RST} ${cmd}"
+        ((cmd_num++))
+      done < "$commands_file"
+      echo ""
+      
+      # Auto-execute if auto_execute flag is set
+      if [[ "$auto_execute" == true ]]; then
+        echo -e "${STD_GRN}Auto-executing all commands...${RST}"
+        echo ""
+        
+        cmd_num=1
+        while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+          echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
+          echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
+          echo ""
+          
+          # Special case: if only one command, run without cluster_id
+          if [[ $command_count -eq 1 ]]; then
+            simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
+            echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
+            appversion "$simple_cmd"
+          else
+            echo -e "${STD_GRN}Running:${RST} ${cmd}"
+            appversion "$cmd"
+          fi
+          echo ""
+          echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
+          echo ""
+          ((cmd_num++))
+        done < "$commands_file" 3< "$details_file"
+      else
+        # Interactive mode - prompt user for selection
+        while true; do
+          echo -e "${STD_YEL}Choose to execute [ ${STD_GRN}y/yes${STD_YEL} : all | ${STD_CYN}1-4${STD_YEL} : range | ${STD_CYN}1,3,4${STD_YEL} : multiple select | ${STD_RED}enter${STD_YEL} to exit ]${RST} : \c"
+          read -r user_selection
+          
+          # Handle empty input (exit)
+          if [[ -z "$user_selection" || "$user_selection" == "q" ]]; then
+            echo -e "${STD_YEL}Exiting sledge mode.${RST}"
+            break
+          fi
+          
+          # Handle "all" selection
+          if [[ "$user_selection" =~ ^(y|yes|Y|YES)$ ]]; then
+            echo -e "${STD_GRN}Executing all commands...${RST}"
+            echo ""
+            
+            cmd_num=1
+            while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+              echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
+              echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
+              echo ""
+              
+              # Special case: if only one command, run without cluster_id
+              if [[ $command_count -eq 1 ]]; then
+                simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
+                echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
+                appversion "$simple_cmd"
+              else
+                echo -e "${STD_GRN}Running:${RST} ${cmd}"
+                appversion "$cmd"
+              fi
+              echo ""
+              echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
+              echo ""
+              ((cmd_num++))
+            done < "$commands_file" 3< "$details_file"
+            break
+          fi
+          
+          # Handle range selection (e.g., "1-3")
+          if [[ "$user_selection" =~ ^[0-9]+-[0-9]+$ ]]; then
+            start_num=$(echo "$user_selection" | cut -d'-' -f1)
+            end_num=$(echo "$user_selection" | cut -d'-' -f2)
+            
+            # Validate range
+            if [[ $start_num -ge 1 && $end_num -le $command_count && $start_num -le $end_num ]]; then
+              echo -e "${STD_GRN}Executing commands ${start_num} to ${end_num}...${RST}"
+              echo ""
+              
+              cmd_num=1
+              while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+                if [[ $cmd_num -ge $start_num && $cmd_num -le $end_num ]]; then
+                  echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
+                  echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
+                  echo ""
+                  
+                  # Special case: if only one command in selection, run without cluster_id
+                  selection_count=$((end_num - start_num + 1))
+                  if [[ $selection_count -eq 1 ]]; then
+                    simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
+                    echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
+                    appversion "$simple_cmd"
+                  else
+                    echo -e "${STD_GRN}Running:${RST} ${cmd}"
+                    appversion "$cmd"
+                  fi
+                  echo ""
+                  echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
+                  echo ""
+                fi
+                ((cmd_num++))
+              done < "$commands_file" 3< "$details_file"
+              break
+            else
+              echo -e "${STD_RED}Invalid range. Please enter a valid range (1-${command_count}).${RST}"
+              continue
+            fi
+          fi
+          
+          # Handle multiple selection (e.g., "1,3,5")
+          if [[ "$user_selection" =~ ^[0-9,]+$ ]]; then
+            IFS=',' read -r -a selected_nums <<< "$user_selection"
+            valid_selection=true
+            
+            # Validate all selected numbers
+            for num in "${selected_nums[@]}"; do
+              num=$(echo "$num" | xargs)  # Trim whitespace
+              if [[ ! ($num -ge 1 && $num -le $command_count) ]]; then
+                echo -e "${STD_RED}Invalid selection: ${num}. Please enter numbers between 1 and ${command_count}.${RST}"
+                valid_selection=false
+                break
+              fi
+            done
+            
+            if [[ "$valid_selection" == true ]]; then
+              echo -e "${STD_GRN}Executing selected commands: ${user_selection}...${RST}"
+              echo ""
+              
+              cmd_num=1
+              while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+                # Check if current command number is in selection
+                for selected_num in "${selected_nums[@]}"; do
+                  selected_num=$(echo "$selected_num" | xargs)
+                  if [[ $cmd_num -eq $selected_num ]]; then
+                    echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
+                    echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
+                    echo ""
+                    
+                    # Special case: if only one command in selection, run without cluster_id
+                    if [[ ${#selected_nums[@]} -eq 1 ]]; then
+                      simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
+                      echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
+                      appversion "$simple_cmd"
+                    else
+                      echo -e "${STD_GRN}Running:${RST} ${cmd}"
+                      appversion "$cmd"
+                    fi
+                    echo ""
+                    echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
+                    echo ""
+                    break
+                  fi
+                done
+                ((cmd_num++))
+              done < "$commands_file" 3< "$details_file"
+              break
+            else
+              continue
+            fi
+          fi
+          
+          # Invalid input
+          echo -e "${STD_RED}Invalid input. Please try again.${RST}"
+        done
+      fi
+      
+      # Clean up temp files
+      rm -f "$commands_file" "$details_file"
     else
       echo -e "${STD_RED}No matching YAML files found or unable to extract information.${RST}"
     fi
