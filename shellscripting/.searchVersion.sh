@@ -195,19 +195,64 @@ extract_yaml_info() {
                   match_stage = gslb_to_stages[gslb_env]
                   if (match_stage in stage_to_cluster) {
                     cluster_val = stage_to_cluster[match_stage]
-                    # Apply environment filter if specified
-                    if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                    # Apply environment filter if specified (handle comma-separated filters)
+                    should_include = 0
+                    if (env_filter == "") {
+                      should_include = 1
+                    } else {
+                      # Split env_filter by comma and check each filter
+                      n_filters = split(env_filter, filter_array, ",")
+                      for (f = 1; f <= n_filters; f++) {
+                        filter_term = filter_array[f]
+                        gsub(/^[ \t]+|[ \t]+$/, "", filter_term)  # Trim whitespace
+                        if (index(gslb_env, filter_term) > 0) {
+                          should_include = 1
+                          break
+                        }
+                      }
+                    }
+                    if (should_include) {
                       print namespace "\t" artifact "\t" cluster_val "\t" gslb_env
                     }
                   } else {
                     # If no matching stage found, use default cluster
-                    if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                    should_include = 0
+                    if (env_filter == "") {
+                      should_include = 1
+                    } else {
+                      # Split env_filter by comma and check each filter
+                      n_filters = split(env_filter, filter_array, ",")
+                      for (f = 1; f <= n_filters; f++) {
+                        filter_term = filter_array[f]
+                        gsub(/^[ \t]+|[ \t]+$/, "", filter_term)  # Trim whitespace
+                        if (index(gslb_env, filter_term) > 0) {
+                          should_include = 1
+                          break
+                        }
+                      }
+                    }
+                    if (should_include) {
                       print namespace "\t" artifact "\tdefault-cluster\t" gslb_env
                     }
                   }
                 } else {
                   # If no matchStages found, use default cluster
-                  if (env_filter == "" || index(gslb_env, env_filter) > 0) {
+                  should_include = 0
+                  if (env_filter == "") {
+                    should_include = 1
+                  } else {
+                    # Split env_filter by comma and check each filter
+                    n_filters = split(env_filter, filter_array, ",")
+                    for (f = 1; f <= n_filters; f++) {
+                      filter_term = filter_array[f]
+                      gsub(/^[ \t]+|[ \t]+$/, "", filter_term)  # Trim whitespace
+                      if (index(gslb_env, filter_term) > 0) {
+                        should_include = 1
+                        break
+                      }
+                    }
+                  }
+                  if (should_include) {
                     print namespace "\t" artifact "\tdefault-cluster\t" gslb_env
                   }
                 }
@@ -218,6 +263,66 @@ extract_yaml_info() {
       }
     ' "$yaml_file" >> "$temp_file"
   done
+}
+
+# Helper function to execute command with loading animation
+execute_command_with_loading() {
+    local cmd="$1"
+    local cmd_num="$2"
+    local cmd_namespace="$3"
+    local cmd_artifact="$4"
+    local cmd_environment="$5"
+    local cmd_cluster="$6"
+    local mode="$7"  # New parameter for mode (sledge or details)
+    
+    # local loading_message="${STG_CYN}${cmd_num}${RST} ${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STG_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
+    local loading_message=$'\033[0;36m'"${cmd_num}"$'\033[0m Namespace: \033[0;36m'"${cmd_namespace}"$'\033[0m | App: \033[1;96m'"${cmd_artifact}"$'\033[0m-\033[0;36m'"${cmd_environment}"$'\033[0m | Cluster: \033[1;95m'"${cmd_cluster}"$'\033[0m'
+    
+    # Start loading animation (will automatically detect if in terminal/pipe context)
+    start_loading "$loading_message"
+    
+    # Execute the command and capture details based on mode
+    if [[ "$mode" == "details" ]]; then
+        # For details mode: show version, dashboard, and logging
+        # Execute the command and capture output using temp file to avoid subshell issues
+        local temp_output=$(mktemp)
+        eval "$cmd" > "$temp_output" 2>/dev/null
+        local details=""
+        if [[ -s "$temp_output" ]]; then
+            details=$(cat "$temp_output" | jsonExtract "" "app.kubernetes.io/version,dashboard,logging,availableReplicas,Pipelines,cNameEndpoints")
+        fi
+        rm -f "$temp_output"
+        
+        # Stop loading animation and clear the line
+        stop_loading
+        
+        # Show final result with basic info (with colors)
+        # echo -e "${STD_CYN}${cmd_num}${RST} Namespace: ${STD_CYN}${cmd_namespace}${RST} | App: ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} | Cluster: ${PUR}${cmd_cluster}${RST}"
+        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_CYN}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${PUR}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}"
+        echo "--------------------------------------------------------------------------------------------------"
+        # Show detailed information
+        echo "$details"
+        echo ""
+    else
+        # For sledge mode: show only version
+        # Execute the command and capture output using temp file to avoid subshell issues
+        local temp_output=$(mktemp)
+        eval "$cmd" > "$temp_output" 2>/dev/null
+        local version=""
+        if [[ -s "$temp_output" ]]; then
+            local version_line=$(cat "$temp_output" | jsonExtract "" "app.kubernetes.io/version" | head -1)
+            if [[ -n "$version_line" ]]; then
+                version=$(echo "$version_line" | cut -d'=' -f2)
+            fi
+        fi
+        rm -f "$temp_output"
+        
+        # Stop loading animation and clear the line
+        stop_loading
+        
+        # Show final result with checkmark, time and version in one line (overwrite the stop_loading output)
+        printf "\r\033[K${YEL}✓${RST} %ss | ${STD_CYN}%s${RST} Namespace: ${STD_CYN}%s${RST} | App: ${SKY}%s${RST}-${STD_CYN}%s${RST} | Cluster: ${PUR}%s${RST} | Version: ${STD_GRN}%s${RST}\n" "$(($(date +%s) - LOADING_START_TIME))" "${cmd_num}" "${cmd_namespace}" "${cmd_artifact}" "${cmd_environment}" "${cmd_cluster}" "${version}"
+    fi
 }
 
 # Function to get version information from kitt files
@@ -360,7 +465,6 @@ extract_yaml_info() {
       if [[ -n "$env_filter" ]]; then
         echo -e "${STD_PUR}Filtered by: ${STD_YEL}${env_filter}${RST}"
       fi      
-      echo ""
       
       # Display table header
       printf "${STD_YEL}%-30s %-30s %-15s %-40s${RST}\n" "NAMESPACE" "ARTIFACT" "ENVIRONMENT" "CLUSTER_ID"
@@ -391,7 +495,6 @@ extract_yaml_info() {
       if [[ -n "$env_filter" ]]; then
         echo -e "${STD_PUR}Filtered by: ${STD_YEL}${env_filter}${RST}"
       fi      
-      echo ""
       
       # Create temporary files to store commands and details
       local commands_file=$(mktemp)
@@ -418,46 +521,36 @@ extract_yaml_info() {
         return 1
       fi
       
-      # Display all sledge commands with numbers
-      echo -e "${STD_YEL}Generated Sledge Commands:${RST}"
+      # Display all sledge commands with numbers and colors matching the table
+      # echo -e "${STD_YEL}Generated Sledge Commands:${RST}"
       echo ""
+      
       local cmd_num=1
-      while IFS= read -r cmd; do
-        echo -e "${STD_CYN}${cmd_num}.${RST} ${cmd}"
+      while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+        # Create colored version of the command
+        echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${BRN}${cmd_namespace}${RST} -c ${PUR}${cmd_cluster}${RST} --json"
         ((cmd_num++))
-      done < "$commands_file"
-      echo ""
+      done < "$commands_file" 3< "$details_file"
       
       # Auto-execute if auto_execute flag is set
       if [[ "$auto_execute" == true ]]; then
-        echo -e "${STD_GRN}Auto-executing all commands...${RST}"
         echo ""
         
         cmd_num=1
         while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
-          echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
-          echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
-          echo ""
-          
-          # Special case: if only one command, run without cluster_id
-          if [[ $command_count -eq 1 ]]; then
-            simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
-            echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
-            appversion "$simple_cmd"
-          else
-            echo -e "${STD_GRN}Running:${RST} ${cmd}"
-            appversion "$cmd"
+          # Execute command with loading animation and simplified output
+          local mode_param="sledge"
+          if [[ "$details_mode" == true ]]; then
+            mode_param="details"
           fi
-          echo ""
-          echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
-          echo ""
+          execute_command_with_loading "$cmd" "$cmd_num" "$cmd_namespace" "$cmd_artifact" "$cmd_environment" "$cmd_cluster" "$mode_param"
           ((cmd_num++))
         done < "$commands_file" 3< "$details_file"
       else
         # Interactive mode - prompt user for selection
         while true; do
           echo -e "${STD_YEL}Choose to execute [ ${STD_GRN}y/yes${STD_YEL} : all | ${STD_CYN}1-4${STD_YEL} : range | ${STD_CYN}1,3,4${STD_YEL} : multiple select | ${STD_RED}enter${STD_YEL} to exit ]${RST} : \c"
-          read -r user_selection
+          read -r user_selection < /dev/tty
           
           # Handle empty input (exit)
           if [[ -z "$user_selection" || "$user_selection" == "q" ]]; then
@@ -467,27 +560,16 @@ extract_yaml_info() {
           
           # Handle "all" selection
           if [[ "$user_selection" =~ ^(y|yes|Y|YES)$ ]]; then
-            echo -e "${STD_GRN}Executing all commands...${RST}"
             echo ""
             
             cmd_num=1
             while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
-              echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
-              echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
-              echo ""
-              
-              # Special case: if only one command, run without cluster_id
-              if [[ $command_count -eq 1 ]]; then
-                simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
-                echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
-                appversion "$simple_cmd"
-              else
-                echo -e "${STD_GRN}Running:${RST} ${cmd}"
-                appversion "$cmd"
+              # Execute command with loading animation and simplified output
+              local mode_param="sledge"
+              if [[ "$details_mode" == true ]]; then
+                mode_param="details"
               fi
-              echo ""
-              echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
-              echo ""
+              execute_command_with_loading "$cmd" "$cmd_num" "$cmd_namespace" "$cmd_artifact" "$cmd_environment" "$cmd_cluster" "$mode_param"
               ((cmd_num++))
             done < "$commands_file" 3< "$details_file"
             break
@@ -500,29 +582,17 @@ extract_yaml_info() {
             
             # Validate range
             if [[ $start_num -ge 1 && $end_num -le $command_count && $start_num -le $end_num ]]; then
-              echo -e "${STD_GRN}Executing commands ${start_num} to ${end_num}...${RST}"
               echo ""
               
               cmd_num=1
               while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
                 if [[ $cmd_num -ge $start_num && $cmd_num -le $end_num ]]; then
-                  echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
-                  echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
-                  echo ""
-                  
-                  # Special case: if only one command in selection, run without cluster_id
-                  selection_count=$((end_num - start_num + 1))
-                  if [[ $selection_count -eq 1 ]]; then
-                    simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
-                    echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
-                    appversion "$simple_cmd"
-                  else
-                    echo -e "${STD_GRN}Running:${RST} ${cmd}"
-                    appversion "$cmd"
+                  # Execute command with loading animation and simplified output
+                  local mode_param="sledge"
+                  if [[ "$details_mode" == true ]]; then
+                    mode_param="details"
                   fi
-                  echo ""
-                  echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
-                  echo ""
+                  execute_command_with_loading "$cmd" "$cmd_num" "$cmd_namespace" "$cmd_artifact" "$cmd_environment" "$cmd_cluster" "$mode_param"
                 fi
                 ((cmd_num++))
               done < "$commands_file" 3< "$details_file"
@@ -535,7 +605,7 @@ extract_yaml_info() {
           
           # Handle multiple selection (e.g., "1,3,5")
           if [[ "$user_selection" =~ ^[0-9,]+$ ]]; then
-            IFS=',' read -r -a selected_nums <<< "$user_selection"
+            IFS=',' read -r -A selected_nums <<< "$user_selection"
             valid_selection=true
             
             # Validate all selected numbers
@@ -549,7 +619,6 @@ extract_yaml_info() {
             done
             
             if [[ "$valid_selection" == true ]]; then
-              echo -e "${STD_GRN}Executing selected commands: ${user_selection}...${RST}"
               echo ""
               
               cmd_num=1
@@ -558,22 +627,12 @@ extract_yaml_info() {
                 for selected_num in "${selected_nums[@]}"; do
                   selected_num=$(echo "$selected_num" | xargs)
                   if [[ $cmd_num -eq $selected_num ]]; then
-                    echo -e "${STD_YEL}Executing Command ${cmd_num}:${RST}"
-                    echo -e "${BRN}Namespace:${RST} ${cmd_namespace} | ${SKY}Artifact:${RST} ${cmd_artifact} | ${STD_CYN}Environment:${RST} ${cmd_environment} | ${PUR}Cluster:${RST} ${cmd_cluster}"
-                    echo ""
-                    
-                    # Special case: if only one command in selection, run without cluster_id
-                    if [[ ${#selected_nums[@]} -eq 1 ]]; then
-                      simple_cmd="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace} --json"
-                      echo -e "${STD_GRN}Running (simplified):${RST} ${simple_cmd}"
-                      appversion "$simple_cmd"
-                    else
-                      echo -e "${STD_GRN}Running:${RST} ${cmd}"
-                      appversion "$cmd"
+                    # Execute command with loading animation and simplified output
+                    local mode_param="sledge"
+                    if [[ "$details_mode" == true ]]; then
+                      mode_param="details"
                     fi
-                    echo ""
-                    echo -e "${STD_YEL}$(printf '%*s' 80 | tr ' ' '-')${RST}"
-                    echo ""
+                    execute_command_with_loading "$cmd" "$cmd_num" "$cmd_namespace" "$cmd_artifact" "$cmd_environment" "$cmd_cluster" "$mode_param"
                     break
                   fi
                 done
@@ -819,104 +878,88 @@ extract_yaml_info() {
 
 
 appversion() {
-    # Run the command, clean output, extract Labels section, and get the version
-    cleaned_output=$(expect -c "
-    spawn $*
-    expect \">\"
-    send \"\r\"
-    expect eof
-    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g' | tr -cd '\11\12\15\40-\176')
+    # Simple direct command execution with output capture
+    local output=""
+    
+    # Execute the sledge command directly and capture all output
+    if command -v sledge >/dev/null 2>&1; then
+        # Run the command with timeout and capture output
+        output=$(timeout 30s bash -c "$*" 2>/dev/null | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g' | tr -cd '\11\12\15\40-\176')
+    else
+        echo "N/A"
+        return 1
+    fi
 
     # Check if output is JSON format (contains --json flag)
     if echo "$*" | grep -q -- "--json"; then
         # Parse JSON output for version
-        echo "$cleaned_output" | grep -o '"app\.kubernetes\.io/version"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"app\.kubernetes\.io\/version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1
+        echo "$output" | grep '"app\.kubernetes\.io/version"' | sed 's/.*"app\.kubernetes\.io\/version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1
     else
         # Parse text output for version (legacy)
-        echo "$cleaned_output" | awk '/Labels/{flag=1; next} /Status/{flag=0} flag' | grep -E 'app.kubernetes.io/version[ ]*:' | head -1 | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}'
+        echo "$output" | awk '/Labels/{flag=1; next} /Status/{flag=0} flag' | grep -E 'app.kubernetes.io/version[ ]*:' | head -1 | awk -F: '{gsub(/^[ \t]+|[ \t]+$/, "", $2); print $2}'
     fi
 }
 
-appdetails() {
-    # Run the command, clean output, and extract dashboard and logging URLs
-    cleaned_output=$(expect -c "
-    spawn $*
-    expect \">\"
-    send \"\r\"
-    expect eof
-    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g')
 
-    # Parse text output (original functionality)
-    version=$(echo "$cleaned_output" | grep "app.kubernetes.io/version" | head -1 | sed 's/.*app\.kubernetes\.io\/version[[:space:]]*:[[:space:]]*//' | sed 's/[[:space:]].*//' | sed 's/[^a-zA-Z0-9.-].*//')
-    dashboard_url=$(echo "$cleaned_output" | grep "➤.*Dashboard:" | head -1 | sed 's/.*➤[[:space:]]*Dashboard:[[:space:]]*//')
-    logging_output=$(echo "$cleaned_output" | grep "➤.*Logging")
+jsonExtract() {
+    local input="$1"
+    local key_pattern="$2"
     
-    # Output results
-    if [[ -n "$version" ]]; then
-        echo -e "${STD_CYN}Version:${RST} ${BLK}$version${RST}"
+    # Check if input is a file, JSON string, or stdin
+    local json_content=""
+    
+    # If no arguments provided and stdin is available, read from stdin
+    if [[ $# -eq 0 ]] || [[ -z "$input" ]] && [[ ! -t 0 ]]; then
+        json_content=$(cat)
+    elif [[ -f "$input" ]]; then
+        json_content=$(cat "$input")
+    else
+        json_content="$input"
     fi
-    if [[ -n "$dashboard_url" ]]; then
-        echo -e "${STD_CYN}Dashboard:${RST} ${BLK}$dashboard_url${RST}"
+    
+    # Validate JSON
+    if ! echo "$json_content" | jq . >/dev/null 2>&1; then
+        echo "Error: Invalid JSON input" >&2
+        return 1
     fi
-    if [[ -n "$logging_output" ]]; then
-        local counter=1
-        while IFS= read -r line; do
-            if [[ -n "$line" ]]; then
-                # Extract the logging type and URL
-                logging_type=$(echo "$line" | sed 's/.*➤[[:space:]]*Logging\([^:]*\):.*/\1/' | sed 's/^_//')
-                logging_url=$(echo "$line" | sed 's/.*➤[[:space:]]*Logging[^:]*:[[:space:]]*//')
-                
-                if [[ -z "$logging_type" || "$logging_type" == "$line" ]]; then
-                    echo -e "${STD_CYN}Logging:${RST} ${BLK}$logging_url${RST}"
+
+    # Function to recursively flatten JSON
+    flatten_json() {
+        local json="$1"
+        local prefix="$2"
+        
+        echo "$json" | jq -r --arg prefix "$prefix" '
+            def flatten:
+                . as $in
+                | reduce paths(scalars) as $path (
+                    {};
+                    . + { ($path | map(tostring) | join(".")): $in | getpath($path) }
+                );
+            flatten | to_entries[] | 
+            if $prefix == "" then
+                "\(.key)=\(.value)"
+            else
+                # Support multiple patterns separated by comma, case-insensitive
+                ($prefix | split(",") | map(. | gsub("^\\s+|\\s+$";"")) | .[]) as $pattern |
+                if (.key | test($pattern; "i")) then
+                    "\(.key)=\(.value)"
                 else
-                    echo -e "${STD_CYN}Logging_$logging_type:${RST} ${BLK}$logging_url${RST}"
-                fi
-            fi
-        done <<< "$logging_output"
-    fi
-    if [[ -z "$version" && -z "$dashboard_url" && -z "$logging_output" ]]; then
-        echo "No details found"
-    fi
-}
-
-jsonDetails() {
-    # Run the command, clean output, and extract JSON details
-    cleaned_output=$(expect -c "
-    spawn $*
-    expect \">\"
-    send \"\r\"
-    expect eof
-    " | sed -r "s/\x1B\[[0-9;]*[a-zA-Z]//g" | sed 's/\x1B\][0-9];[^\a]*\a//g')
+                    empty
+                end
+            end
+        ' | while IFS='=' read -r key value; do
+            # Plain output without colors for version extraction            
+            echo "${IPR}${key}${RST}=${value}"
+        done
+    }
     
-    # Parse JSON output
-    version=$(echo "$cleaned_output" | grep -o '"app\.kubernetes\.io/version"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"app\.kubernetes\.io\/version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1)
-    dashboard_url=$(echo "$cleaned_output" | grep -o '"Dashboard"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"Dashboard"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/' | head -1)
-    logging_urls=$(echo "$cleaned_output" | grep -o '"Logging[^"]*"[[:space:]]*:[[:space:]]*"[^"]*"' | sed 's/.*"\(Logging[^"]*\)"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1: \2/')
-    
-    # Output results
-    if [[ -n "$version" ]]; then
-        echo -e "${STD_CYN}Version:${RST} ${BLK}$version${RST}"
-    fi
-    if [[ -n "$dashboard_url" ]]; then
-        echo -e "${STD_CYN}Dashboard:${RST} ${BLK}$dashboard_url${RST}"
-    fi
-    if [[ -n "$logging_urls" ]]; then
-        while IFS= read -r line; do
-            if [[ -n "$line" ]]; then
-                if [[ "$line" == *": "* ]]; then
-                    logging_type=$(echo "$line" | cut -d':' -f1 | sed 's/^_//')
-                    logging_url=$(echo "$line" | cut -d':' -f2- | sed 's/^ *//')
-                    if [[ -z "$logging_type" ]]; then
-                        echo -e "${STD_CYN}Logging:${RST} ${BLK}$logging_url${RST}"
-                    else
-                        echo -e "${STD_CYN}Logging_$logging_type:${RST} ${BLK}$logging_url${RST}"
-                    fi
-                fi
-            fi
-        done <<< "$logging_urls"
-    fi
-    if [[ -z "$version" && -z "$dashboard_url" && -z "$logging_urls" ]]; then
-        echo "No details found"
+    # Extract key-value pairs
+    if [[ -z "$key_pattern" ]]; then
+        # Extract all key-value pairs
+        flatten_json "$json_content" ""
+    else
+        # Extract specific key pattern
+        flatten_json "$json_content" "$key_pattern"
     fi
 }
 

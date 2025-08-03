@@ -40,6 +40,24 @@ LOADING_PID=""
 LOADING_ACTIVE=false
 LOADING_START_TIME=0
 
+# Global start loading animation function
+start_loading() {
+    local message="$1"
+    if [[ "$LOADING_ACTIVE" == false ]]; then
+        LOADING_ACTIVE=true
+        LOADING_START_TIME=$(date +%s)
+        # Disable job control messages
+        set +m
+        (
+            trap 'exit 0' TERM
+            show_loading "$message"
+        ) &
+        LOADING_PID=$!
+        # Re-enable job control messages
+        set -m
+    fi
+}
+
 # Global loading spinner function - simplified version
 show_loading() {
     local message="$1"
@@ -65,38 +83,22 @@ show_loading() {
         local term_width=$(tput cols 2>/dev/null || echo 80)
         local message_with_spinner="${spinner_chars:$i:1} ${message}"
         local message_length=$(echo -n "${message_with_spinner}" | wc -c)
-        local time_length=$(echo -n "${time_str}" | wc -c)
+        local time_length=$(echo -n "${time_str}" | wc -c)        
         local spaces_needed=$((term_width - message_length - time_length - 2))
         
         # Ensure we don't go negative
-        if [[ $spaces_needed -lt 1 ]]; then
+        if [[ $spaces_needed -lt 1 ]]; then           
             spaces_needed=1
         fi
         
         local spaces=$(printf "%*s" $spaces_needed "")
+        # Print the spinner with left-aligned time
+        printf "\r${CYN}%s${RST} %s%s" "${time_str} " "${spinner_chars:$i:1} " "${message}"
+
         
-        printf "\r${CYN}%s${RST} %s%s${YEL}%s${RST}" "${spinner_chars:$i:1}" "${message}" "${spaces}" "${time_str}"
         i=$(((i + 1) % ${#spinner_chars}))
         sleep 0.2
     done
-}
-
-# Global start loading animation function
-start_loading() {
-    local message="$1"
-    if [[ "$LOADING_ACTIVE" == false ]]; then
-        LOADING_ACTIVE=true
-        LOADING_START_TIME=$(date +%s)
-        # Disable job control messages
-        set +m
-        (
-            trap 'exit 0' TERM
-            show_loading "$message"
-        ) &
-        LOADING_PID=$!
-        # Re-enable job control messages
-        set -m
-    fi
 }
 
 # Global stop loading animation function
@@ -129,7 +131,7 @@ stop_loading() {
         
         # Get terminal width and calculate position for right-aligned time
         local term_width=$(tput cols 2>/dev/null || echo 80)
-        local completed_text="✓ Completed"
+        local completed_text="✓-> Completed"
         local completed_length=$(echo -n "${completed_text}" | wc -c)
         local time_length=$(echo -n "${time_str}" | wc -c)
         local spaces_needed=$((term_width - completed_length - time_length - 1))
@@ -140,8 +142,9 @@ stop_loading() {
         fi
         
         local spaces=$(printf "%*s" $spaces_needed "")
-        
-        printf "\r${GRN}✓ Completed${RST}%s${YEL}%s${RST}\n" "${spaces}" "${time_str}"
+
+        # printf "\r\033[K${YEL}✓${RST} %s\n" "${time_str}"
+
         LOADING_PID=""
     fi
 }
@@ -164,4 +167,7 @@ cleanup() {
 
 # Set up trap for cleanup on exit
 trap cleanup EXIT INT TERM
+
+
+
 
