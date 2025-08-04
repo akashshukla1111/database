@@ -42,14 +42,22 @@ function loading() {
   fs -frs loading-server/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml | search $1 -s
 }
 
-function v() {
+
+
+function f() {
   log="Running command for $1 with stages $2 -->"
-  search_cmd="search $2 ${3:--s} ${4}"
+  arg=$([ "${3:-"-s"}" = "-ss" ] && echo "" || echo "${3:-"-s"}")
+  search_cmd="search $2 $arg ${4}"
+  local find_cmd=""
+  local valid=true
+
   case "$1" in
     -rcv | rcv )
         find_cmd="fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
     -gdm | gdm )
         find_cmd="fs -frs gdm/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+    -loc | loc | location | -location )
+        find_cmd="fs -fr gls-location/fc,us-wm-fc,default-fc us-wm-fc.yml,pre-main";;
     -inv | inv )
         find_cmd="fs -fr isc/us-wm-fc,default-fc us-wm-fc.yml,pre-main.yml";;
     -os | os )
@@ -60,17 +68,25 @@ function v() {
         find_cmd="fs -frs nte/default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
     -loading | loading )
         find_cmd="fs -frs loading/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
-    -inb | inb  )
-      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml";;
+    -inb | inb )
+        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml";;
     -outb | outb )
-      find_cmd="fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml";;
-    ui | -ui)
-      find_cmd="fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml";;
-    inout | -inout)
-      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml";;
-    -all | all | * )
-      find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml";;
+        find_cmd="fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml";;
+    ui | -ui )
+        find_cmd="fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml";;
+    inout | -inout )
+        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml";;
+    -all | all )
+        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml";;
+    *)
+        echo "${RED}Invalid command: ${RST} $1"
+        valid=false
+        ;;
   esac
-      echo "$log ${BRI_WHT} [$find_cmd | $search_cmd]"
-      eval "$find_cmd" | eval $search_cmd 
+
+  if [ "$valid" = true ]; then
+    echo "$log ${BRI_WHT} [$find_cmd | $search_cmd]"
+    eval "$find_cmd" | eval "$search_cmd"
+  fi
 }
+

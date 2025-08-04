@@ -22,28 +22,28 @@ show_search_help() {
     echo ""
     echo -e "${STD_YEL}Examples:${RST}"
     echo -e "  ${STD_GRN}String Search Mode (default):${RST}"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" java_opts${RST}         # Search for 'java_opts' string"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc stg-config.yml)\"${RST}                   # Show file contents"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" java_opts -kv${RST}     # Search for 'java_opts' key"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" -kv${RST}               # Show all keys"
-    echo -e "  ${STD_CYN}fs -fr aos,os/default-fc stg-config.yml | search -kv${RST}                     # Show all keys"
-    echo -e "  ${STD_CYN}fs -fr aos,os/default-fc stg-config.yml | search java_opts -kv${RST}           # Search key in files"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" java_opts         # Search for 'java_opts' string"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc stg-config.yml)\"                   # Show file contents"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" java_opts -kv     # Search for 'java_opts' key"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc stg-config.yml)\" -kv               # Show all keys"
+    echo -e "  fs -fr aos,os/default-fc stg-config.yml | search -kv                     # Show all keys"
+    echo -e "  fs -fr aos,os/default-fc stg-config.yml | search java_opts -kv           # Search key in files"
     echo ""
     echo -e "  ${STD_GRN}Sledge Command Mode:${RST}"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -s${RST}                         # No filter, show all"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -s${RST}                  # Run sledge commands for stg"
-    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search stg -s${RST}                           # Use with pipe"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr nte/default-fc pre-main)\" stg -y${RST}                     # Auto-execute for stg"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr nte/default-fc pre-main)\" -sy${RST}                        # Auto-execute all"
+    echo -e "  search \"\$(fs -fr gdm/default-fc pre-main)\" -s                         # No filter, show all"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -s                  # Run sledge commands for stg"
+    echo -e "  fs -fr nte/default-fc pre-main | search stg -s                           # Use with pipe"
+    echo -e "  search \"\$(fs -fr nte/default-fc pre-main)\" stg -y                     # Auto-execute for stg"
+    echo -e "  search \"\$(fs -fr nte/default-fc pre-main)\" -sy                        # Auto-execute all"
     echo ""    
-    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search -details${RST}                         # Details with pipe"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -details${RST}                   # Get details for all"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -details${RST}            # Get detailed info for stg"
+    echo -e "  fs -fr nte/default-fc pre-main | search -details                         # Details with pipe"
+    echo -e "  search \"\$(fs -fr gdm/default-fc pre-main)\" -details                   # Get details for all"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -details            # Get detailed info for stg"
     echo ""
     echo -e "  ${STD_GRN}Show Mode:${RST}"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -show${RST}               # Show table for stg"
-    echo -e "  ${STD_CYN}search \"\$(fs -fr gdm/default-fc pre-main)\" -show${RST}                      # Show table for all"
-    echo -e "  ${STD_CYN}fs -fr nte/default-fc pre-main | search -show${RST}                            # Table with pipe"
+    echo -e "  search \"\$(fs -fr aos,os/default-fc pre-main)\" stg -show               # Show table for stg"
+    echo -e "  search \"\$(fs -fr gdm/default-fc pre-main)\" -show                     # Show table for all"
+    echo -e "  fs -fr nte/default-fc pre-main | search -show                            # Table with pipe"
     echo ""
 }
 
@@ -806,9 +806,9 @@ execute_command_with_loading() {
           fi
           
           # If nothing found, show not found message
-          if [[ -z "$kv_results" && -z "$yaml_results" ]]; then
-            echo -e "  ${STD_RED}Key '${key}' not found in ${yml_file}.${RST}"
-          fi
+#          if [[ -z "$kv_results" && -z "$yaml_results" ]]; then
+#            echo -e "  ${STD_RED}Key '${key}' not found in ${yml_file}.${RST}"
+#          fi
         done
       fi
     done
@@ -861,9 +861,10 @@ execute_command_with_loading() {
         return 1
       fi
     fi
-    
+
+    echo -e "\n${STD_YEL}Searching for: ${term}${RST}"
     for file in "${files[@]}"; do
-      echo -e "\n${BLU}File:${RST} ${file}"
+      echo -e "\n${BLU}File:${RST} ${STD_GRN}${file}${RST}"
       if [[ -z "$search_keys" ]]; then
         # Show file contents if no search string specified
         cat "$file"
@@ -872,9 +873,8 @@ execute_command_with_loading() {
         IFS=',' read -r -A search_terms <<< "$search_keys"
         for term in "${search_terms[@]}"; do
           term=$(echo "$term" | xargs)  # Trim whitespace
-          echo -e "\n${STD_YEL}Searching for: ${term}${RST}"
           # Set grep colors to use green for matches
-          GREP_COLORS='ms=01;32' grep -n -i --color=always "$term" "$file" || echo -e "  ${STD_RED}String '${term}' not found in ${file}.${RST}"
+          GREP_COLORS='ms=01;32' grep -n -i --color=always "$term" "$file" || echo -e "  ${STD_RED}String '${term}' not found.${RST}"
         done
       fi
     done
