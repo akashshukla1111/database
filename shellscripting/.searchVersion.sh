@@ -162,8 +162,40 @@ extract_yaml_info() {
       END {
         if (namespace != "" && artifact != "") {
           if (is_show_mode == "true") {
-            # Show mode: simple comma-separated output
-            if (cluster != "") print namespace "," artifact "," cluster
+            # Show mode: process environments and apply filter
+            if (stages != "") {
+              n = split(stages, gslb_envs, ",")
+              for (i = 1; i <= n; i++) {
+                gslb_env = gslb_envs[i]
+                # Apply environment filter if specified
+                should_include = 0
+                if (env_filter == "") {
+                  should_include = 1
+                } else {
+                  # Split env_filter by comma and check each filter
+                  n_filters = split(env_filter, filter_array, ",")
+                  for (f = 1; f <= n_filters; f++) {
+                    filter_term = filter_array[f]
+                    gsub(/^[ \t]+|[ \t]+$/, "", filter_term)  # Trim whitespace
+                    if (index(gslb_env, filter_term) > 0) {
+                      should_include = 1
+                      break
+                    }
+                  }
+                }
+                if (should_include) {
+                  # Get cluster for this environment
+                  cluster_val = "default-cluster"
+                  if (gslb_env in gslb_to_stages) {
+                    match_stage = gslb_to_stages[gslb_env]
+                    if (match_stage in stage_to_cluster) {
+                      cluster_val = stage_to_cluster[match_stage]
+                    }
+                  }
+                  print namespace "\t" artifact "\t" cluster_val "\t" gslb_env
+                }
+              }
+            }
           } else {
             # Normal mode: map gslb environments to their cluster_ids via matchStages
             if (stages != "") {
@@ -364,7 +396,7 @@ execute_command_with_loading() {
       file_list="$piped_data"
     elif [[ $# -eq 1 ]]; then
       file_list="$piped_data"
-      if [[ "$run_sledge" == true ]]; then
+      if [[ "$run_sledge" == true || "$show_mode" == true ]]; then
         env_filter="$1"
       elif [[ "$key_value_mode" == true ]]; then
         search_keys="$1"
@@ -433,8 +465,8 @@ execute_command_with_loading() {
   # Choose the appropriate processing mode
   if [[ "$show_mode" == true ]]; then
     # SHOW MODE: Display extracted information in tabular format
-    # Create temporary file for processing (with special name to trigger grouping)
-    local temp_file=$(mktemp)
+    # Create temporary file for processing (with special name to trigger show mode)
+    local temp_file=$(mktemp -t show_mode.XXXXX)
     
     # Use helper function to extract YAML information (grouped clusters)
     extract_yaml_info "$file_list" "$env_filter" "$temp_file"
@@ -712,6 +744,8 @@ execute_command_with_loading() {
         return 1
       fi
     fi
+
+    echo -e "\n${STD_YEL}Searching for key '${search_keys}'...${RST}"
     
     for yml_file in "${files[@]}"; do
       echo -e "\n${BLU}File:${RST} ${yml_file}"
@@ -769,10 +803,10 @@ execute_command_with_loading() {
         rm -f "$temp_kv_file"
       else
         # Search for specific keys in both YAML format and key=value format
-        IFS=',' read -r -A keys <<< "$search_keys"
+        IFS=',' read -r -A keys <<< "$search_keys"        
         for key in "${keys[@]}"; do
           key=$(echo "$key" | xargs)  # Trim whitespace
-          echo -e "\n${STD_YEL}Searching for key '${key}'...${RST}"
+          
           
           # Search for key=value patterns containing the key (partial match)
           local kv_results=$(grep -n -E "[a-zA-Z0-9_.-]*${key}[a-zA-Z0-9_.-]*=" "$yml_file" 2>/dev/null)
