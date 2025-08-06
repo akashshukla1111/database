@@ -582,31 +582,31 @@ execute_command_with_loading() {
             fi
           fi
           
-          # Handle single number selection (e.g., "1")
-          if [[ "$user_selection" =~ ^[0-9]+$ ]]; then
-            selected_num=$(echo "$user_selection" | xargs)  # Trim whitespace
-            
-            # Validate single number
-            if [[ $selected_num -ge 1 && $selected_num -le $command_count ]]; then
-              echo ""
-              
-              cmd_num=1
-              while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
-                if [[ $cmd_num -eq $selected_num ]]; then         
-                  # Build command without cluster ID for single digit selection
-                  sledge_cmd_no_cluster="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace}"
-                  echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${STD_YEL}${cmd_namespace}${RST}"                  
-                  eval "$sledge_cmd_no_cluster"
-                  break
-                fi
-                ((cmd_num++))
-              done < "$commands_file" 3< "$details_file"
-              break
-            else
-              echo -e "${STD_RED}Invalid selection: ${selected_num}. Please enter a number between 1 and ${command_count}.${RST}"
-              continue
-            fi
-          fi
+#          # Handle single number selection (e.g., "1")
+#          if [[ "$user_selection" =~ ^[0-9]+$ ]]; then
+#            selected_num=$(echo "$user_selection" | xargs)  # Trim whitespace
+#
+#            # Validate single number
+#            if [[ $selected_num -ge 1 && $selected_num -le $command_count ]]; then
+#              echo ""
+#
+#              cmd_num=1
+#              while IFS= read -r cmd && IFS='|' read -r cmd_namespace cmd_artifact cmd_environment cmd_cluster <&3; do
+#                if [[ $cmd_num -eq $selected_num ]]; then
+#                  # Build command without cluster ID for single digit selection
+#                  sledge_cmd_no_cluster="sledge wcnp describe app ${cmd_artifact}-${cmd_environment} -n ${cmd_namespace}"
+#                  echo -e "${STD_CYN}${cmd_num}.${RST} ${STD_GRN}sledge${RST} wcnp describe app ${SKY}${cmd_artifact}${RST}-${STD_CYN}${cmd_environment}${RST} -n ${STD_YEL}${cmd_namespace}${RST}"
+#                  eval "$sledge_cmd_no_cluster"
+#                  break
+#                fi
+#                ((cmd_num++))
+#              done < "$commands_file" 3< "$details_file"
+#              break
+#            else
+#              echo -e "${STD_RED}Invalid selection: ${selected_num}. Please enter a number between 1 and ${command_count}.${RST}"
+#              continue
+#            fi
+#          fi
           
           # Handle multiple selection (e.g., "1,3,5")
           if [[ "$user_selection" =~ ^[0-9,]+$ ]]; then

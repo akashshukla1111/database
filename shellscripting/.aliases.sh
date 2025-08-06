@@ -48,45 +48,70 @@ function f() {
   log="Running command for $1 with stages $2 -->"
   arg=$([ "${3:-"-s"}" = "-ss" ] && echo "" || echo "${3:-"-s"}")
   search_cmd="search $2 $arg ${4}"
-  local find_cmd=""
-  local valid=true
+  local sledge_files=""
+  local search_files=""
 
   case "$1" in
     -rcv | rcv )
-        find_cmd="fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs wms-receiving/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr wms-receiving/fc,default-fc,us-wm-fc .yml";;
     -gdm | gdm )
-        find_cmd="fs -frs gdm/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs gdm/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr gdm/fc,default-fc,us-wm-fc .yml";;
     -loc | loc | location | -location )
-        find_cmd="fs -fr gls-location/fc,us-wm-fc,default-fc us-wm-fc.yml,pre-main";;
+        sledge_files="fs -fr gls-location/fc,us-wm-fc,default-fc us-wm-fc.yml,pre-main"
+        search_files="fs -fr gls-location/fc,us-wm-fc,default-fc .yml";;
     -inv | inv )
-        find_cmd="fs -fr isc/us-wm-fc,default-fc us-wm-fc.yml,pre-main.yml";;
+        sledge_files="fs -fr isc/us-wm-fc,default-fc us-wm-fc.yml,pre-main.yml"
+        search_files="fs -fr isc/us-wm-fc,default-fc .yml";;
     -os | os )
-        find_cmd="fs -frs os/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs os/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr os/fc,default-fc,us-wm-fc .yml";;
     -aos | aos )
-        find_cmd="fs -frs aos/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs aos/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr aos/fc,default-fc,us-wm-fc .yml";;
     -fes | fes )
-        find_cmd="fs -frs nte/default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs nte/default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr nte/default-fc,us-wm-fc .yml";;
     -loading | loading )
-        find_cmd="fs -frs loading/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs loading/fc,default-fc,us-wm-fc fc-pre-main-merge.yml,us-wm-fc.yml"
+        search_files="fs -fr loading/fc,default-fc,us-wm-fc .yml";;
     -inb | inb )
-        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml";;
+        sledge_files="fs -frs wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc us-wm-fc.yml"
+        search_files="fs -fr wms-receiving,gdm,isc,slotting,uwms-location/fc,us-wm-fc .yml";;
     -outb | outb )
-        find_cmd="fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml";;
+        sledge_files="fs -frs os,aos,nte,loading,uli/fc,us-wm-fc us-wm-fc.yml"
+        search_files="fs -fr os,aos,nte,loading,uli/fc,us-wm-fc .yml";;
     ui | -ui )
-        find_cmd="fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml";;
+        sledge_files="fs -frs gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc us-wm-manual-fc.yml,us-wm-fc.yml"
+        search_files="fs -fr gdm-web,idc,decant-api/us-wm-fc,us-wm-manual-fc .yml";;
     inout | -inout )
-        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml";;
+        sledge_files="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc us-wm-fc.yml"
+        search_files="fs -fr wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,isc,uli/fc,us-wm-fc .yml";;  
     -all | all )
-        find_cmd="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml";;
+        sledge_files="fs -frs wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc us-wm-fc.yml,us-wm-manual-fc.yml"
+        search_files="fs -fr wms-receiving,gdm,isc,slotting,uwms-location,os,aos,nte,loading,uli,idc,decant-api/fc,us-wm-fc,us-wm-manual-fc .yml";;          
     *)
         echo "${RED}Invalid command: ${RST} $1"
-        valid=false
+        return 1
         ;;
   esac
 
+  # Set valid to true if any argument is -full
+  valid=false
+  for arg in "$@"; do
+    if [ "$arg" = "-full" ]; then
+      valid=true
+      break
+    fi
+  done
+
   if [ "$valid" = true ]; then
-    echo "$log ${BRI_WHT} [$find_cmd | $search_cmd]"
-    eval "$find_cmd" | eval "$search_cmd"
+    echo "$log ${BRI_WHT} [$search_files | $search_cmd]"
+     eval "$search_files" | eval "$search_cmd"
+  else
+    echo "$log ${BRI_WHT} [$sledge_files | $search_cmd]"
+     eval "$sledge_files" | eval "$search_cmd"
   fi
 }
 
