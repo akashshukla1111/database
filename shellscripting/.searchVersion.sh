@@ -139,8 +139,21 @@ extract_yaml_info() {
       # Target section detection
       in_stages && /^[ \t]*target:[ \t]*$/ { in_target = 1 }
       
-      # Cluster ID extraction (to map stages to cluster_ids)
+      # Cluster ID extraction (to map stages to cluster_ids) - more robust parsing
       in_stages && in_target && /^[ \t]*-[ \t]*cluster_id:[ \t]*/ {
+        cluster_line = substr($0, index($0, "cluster_id:") + 11)
+        gsub(/^[ \t\[]+|[ \t\]]+$/, "", cluster_line)  # Remove brackets and whitespace
+        gsub(/"[ \t]*,[ \t]*"/, ",", cluster_line)     # Clean quoted comma-separated values
+        gsub(/^"|"$/, "", cluster_line)                # Remove surrounding quotes
+        
+        if (cluster_line != "" && current_stage != "") {
+          # Store stage -> cluster mapping
+          stage_to_cluster[current_stage] = cluster_line
+        }
+      }
+      
+      # Also handle cluster_id without the dash (different indentation)
+      in_stages && in_target && /^[ \t]*cluster_id:[ \t]*/ && !/^[ \t]*-/ {
         cluster_line = substr($0, index($0, "cluster_id:") + 11)
         gsub(/^[ \t\[]+|[ \t\]]+$/, "", cluster_line)  # Remove brackets and whitespace
         gsub(/"[ \t]*,[ \t]*"/, ",", cluster_line)     # Clean quoted comma-separated values
